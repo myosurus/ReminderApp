@@ -63,4 +63,22 @@
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="ReminderDetailPage.xaml.cs">
+	    <DependentUpon>ReminderDetailPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="ReminderListPage.xaml.cs">
+	    <DependentUpon>ReminderListPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="ReminderDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="ReminderListPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>
