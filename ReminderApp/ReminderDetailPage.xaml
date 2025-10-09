@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ReminderApp.ReminderDetailPage"
+    Title="Reminder">
+
+	<ScrollView>
+		<VerticalStackLayout Padding="12" Spacing="10">
+
+			<Entry Placeholder="Name" Text="{Binding Name}" />
+
+			<Editor Placeholder="Description" Text="{Binding Description}" HeightRequest="120" />
+
+			<Picker x:Name="UrgencyPicker"
+                    Title="Select urgency"
+                    ItemDisplayBinding="{Binding .}" />
+
+			<DatePicker x:Name="ReminderDatePicker"
+                        Date="{Binding ReminderDate, Mode=TwoWay}" />
+
+			<TimePicker x:Name="ReminderTimePicker" />
+
+			<HorizontalStackLayout VerticalOptions="Center">
+				<Switch IsToggled="{Binding IsDone}" />
+				<Label Text="Done" VerticalOptions="Center" Margin="8,0,0,0"/>
+			</HorizontalStackLayout>
+
+			<Button Text="Save" Clicked="OnSaveClicked" />
+			<Button x:Name="DeleteButton" Text="Delete" Clicked="OnDeleteClicked" />
+
+		</VerticalStackLayout>
+	</ScrollView>
+</ContentPage>
