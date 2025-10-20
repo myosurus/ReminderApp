@@ -7,16 +7,23 @@
     Shell.FlyoutBehavior="Disabled"
     Title="ReminderApp">
 
-	<TabBar>
-		<ShellContent
-            Title="Reminders"
-			Route="Reminders" 
+    <TabBar>
+        <ShellContent
+            Title="Задачи"
+            Icon="tasks.png"
+            Route="Reminders"
             ContentTemplate="{DataTemplate local:ReminderListPage}" />
 
-		<ShellContent
-            Title="Add"
-			Route="Add" 
+        <ShellContent
+            Title="Добавить"
+            Icon="add.png"
+            Route="Add"
             ContentTemplate="{DataTemplate local:ReminderDetailPage}" />
-	</TabBar>
 
+        <ShellContent
+            Title="Календарь"
+            Icon="calendar.png"
+            Route="Calendar"
+            ContentTemplate="{DataTemplate local:CalendarPage}" />
+    </TabBar>
 </Shell>

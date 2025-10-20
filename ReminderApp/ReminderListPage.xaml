@@ -1,41 +1,159 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ReminderApp.ReminderListPage"
-			 xmlns:local="clr-namespace:ReminderApp"
-             Title="Reminders">
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ReminderApp.ReminderListPage"
+    Title="Задачи"
+    BackgroundColor="White">
 
-	<VerticalStackLayout Padding="10">
-		<CollectionView x:Name="RemindersList"
-                ItemsSource="{Binding Reminders}"
-                SelectionMode="None">
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-			<CollectionView.ItemTemplate>
-				<DataTemplate>
-					<Frame Margin="5"
-                   Padding="10"
-                   BorderColor="#ccc"
-                   BackgroundColor="#fdfdfd"
-                   CornerRadius="10"
-                   HasShadow="True">
+        <!-- Верхнее уведомление -->
+        <VerticalStackLayout Grid.Row="0" Spacing="2">
+            <Label Text="🔔 Напоминания о задачах"
+                   FontAttributes="Bold"
+                   FontSize="14"
+                   TextColor="#333"/>
+            <Label Text="Не упускайте важные задачи"
+                   FontSize="12"
+                   TextColor="#777"/>
+        </VerticalStackLayout>
 
-						<VerticalStackLayout>
-							<Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16" TextColor="Gray" />
-							<Label Text="{Binding Description}" FontSize="13" TextColor="Gray" />
-							<Label Text="{Binding ReminderDate, StringFormat='Reminder: {0:dd MMM yyyy HH:mm}'}"
-                           FontSize="11"
-                           TextColor="#888" />
-						</VerticalStackLayout>
+        <!-- Основной контент - список задач -->
+        <CollectionView Grid.Row="1"
+                        x:Name="RemindersCollectionView"
+                        SelectionMode="Single"
+                        SelectionChanged="OnReminderSelected">
+            <CollectionView.EmptyView>
+                <!-- Состояние когда задач нет -->
+                <VerticalStackLayout 
+                    VerticalOptions="CenterAndExpand"
+                    HorizontalOptions="CenterAndExpand"
+                    Spacing="10">
+                    <Image Source="clock_icon.png"
+                           HeightRequest="50"
+                           WidthRequest="50"
+                           Aspect="AspectFit"/>
+                    <Label Text="Задачи не найдены"
+                           FontAttributes="Bold"
+                           FontSize="14"
+                           TextColor="#777"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Text="Добавьте первую задачу"
+                           FontSize="12"
+                           TextColor="#999"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
 
-						<Frame.GestureRecognizers>
-							<TapGestureRecognizer
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:ReminderListPage}}, Path=BindingContext.ItemTappedCommand}"
-                        CommandParameter="{Binding .}" />
-						</Frame.GestureRecognizers>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="15,10" 
+                          ColumnDefinitions="Auto,*,Auto,Auto"
+                          BackgroundColor="White"
+                          Margin="0,1">
 
-					</Frame>
-				</DataTemplate>
-			</CollectionView.ItemTemplate>
-		</CollectionView>
-	</VerticalStackLayout>
+                        <!-- Индикатор срочности -->
+                        <Frame Grid.Column="0"
+                               BackgroundColor="{Binding UrgencyColor}"
+                               HeightRequest="12"
+                               WidthRequest="12"
+                               Padding="0"
+                               HasShadow="False"
+                               CornerRadius="6"
+                               VerticalOptions="Center"/>
+
+                        <!-- Название и описание -->
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" Margin="10,0">
+                            <Label Text="{Binding Name}"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="#333"/>
+                            <Label Text="{Binding Description}"
+                                   FontSize="12"
+                                   TextColor="#666"
+                                   LineBreakMode="TailTruncation"
+                                   MaxLines="1"/>
+                            <Label Text="{Binding ReminderDate, StringFormat='{0:dd.MM.yyyy HH:mm}'}"
+                                   FontSize="11"
+                                   TextColor="#999"/>
+                        </VerticalStackLayout>
+
+                        <!-- Статус выполнения -->
+                        <CheckBox Grid.Column="2"
+                                  IsChecked="{Binding IsDone}"
+                                  VerticalOptions="Center"
+                                  Margin="10,0"
+                                  CheckedChanged="OnCheckBoxCheckedChanged"/>
+
+                        <!-- Индикатор просроченности -->
+                        <Frame Grid.Column="3"
+                               BackgroundColor="{Binding OverdueColor}"
+                               HeightRequest="8"
+                               WidthRequest="8"
+                               Padding="0"
+                               HasShadow="False"
+                               CornerRadius="4"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding IsOverdue}"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>
+
+
+
+
+<!--<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ReminderApp.ReminderListPage"
+    Title="Задачи"
+    BackgroundColor="White">
+
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        --><!-- Верхнее уведомление --><!--
+        <VerticalStackLayout Grid.Row="0" Spacing="2">
+            <Label Text="🔔 Напоминания о задачах"
+                   FontAttributes="Bold"
+                   FontSize="14"
+                   TextColor="#333"/>
+            <Label Text="Не упускайте важные задачи"
+                   FontSize="12"
+                   TextColor="#777"/>
+        </VerticalStackLayout>
+
+        --><!-- Основной контент --><!--
+        <VerticalStackLayout Grid.Row="1"
+                             VerticalOptions="CenterAndExpand"
+                             HorizontalOptions="CenterAndExpand"
+                             Spacing="10">
+            <Image Source="clock_icon.png"
+                   HeightRequest="50"
+                   WidthRequest="50"
+                   Aspect="AspectFit"/>
+            <Label Text="Задачи не найдены"
+                   FontAttributes="Bold"
+                   FontSize="14"
+                   TextColor="#777"
+                   HorizontalTextAlignment="Center"/>
+            <Label Text="Добавьте первую задачу"
+                   FontSize="12"
+                   TextColor="#999"
+                   HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>-->
+
