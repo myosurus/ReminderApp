@@ -26,6 +26,11 @@ public class ReminderDatabase
 			return _database.InsertAsync(reminder);
 	}
 
-	public Task<int> DeleteReminderAsync(Reminder reminder) =>
+    public Task<int> CreateReminderAsync(Reminder reminder)
+    {
+        return _database.InsertAsync(reminder);
+    }
+
+    public Task<int> DeleteReminderAsync(Reminder reminder) =>
 		_database.DeleteAsync(reminder);
 }

@@ -1,4 +1,4 @@
-namespace ReminderApp;
+п»їnamespace ReminderApp;
 
 public partial class ReminderDetailPage : ContentPage
 {
@@ -6,8 +6,8 @@ public partial class ReminderDetailPage : ContentPage
     {
         InitializeComponent();
 
-        // Инициализация Picker с русскими названиями
-        var urgencyOptions = new List<string> { "Низкий", "Средний", "Высокий" };
+        // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Picker СЃ СЂСѓСЃСЃРєРёРјРё РЅР°Р·РІР°РЅРёСЏРјРё
+        var urgencyOptions = new List<string> { "РќРёР·РєРёР№", "РЎСЂРµРґРЅРёР№", "Р’С‹СЃРѕРєРёР№" };
         UrgencyPicker.ItemsSource = urgencyOptions;
     }
 
@@ -15,7 +15,7 @@ public partial class ReminderDetailPage : ContentPage
     {
         base.OnAppearing();
 
-        if (BindingContext == null || ((Reminder)BindingContext).Id != 0 && Shell.Current.CurrentItem.Title == "Добавить")
+        if (BindingContext == null || ((Reminder)BindingContext).Id != 0 && Shell.Current.CurrentItem.Title == "Р”РѕР±Р°РІРёС‚СЊ")
         {
             BindingContext = new Reminder
             {
@@ -26,25 +26,26 @@ public partial class ReminderDetailPage : ContentPage
 
         var reminder = (Reminder)BindingContext;
 
-        // Устанавливаем выбранный уровень срочности
+        // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РІС‹Р±СЂР°РЅРЅС‹Р№ СѓСЂРѕРІРµРЅСЊ СЃСЂРѕС‡РЅРѕСЃС‚Рё
         SetUrgencyPicker(reminder.Urgency);
 
-        // Устанавливаем дату и время
+        // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј РґР°С‚Сѓ Рё РІСЂРµРјСЏ
         ReminderDatePicker.Date = reminder.ReminderDate.Date;
         ReminderTimePicker.Time = reminder.ReminderDate.TimeOfDay;
 
-        // Обновляем заголовок в зависимости от режима (добавление/редактирование)
-        Title = reminder.Id == 0 ? "Добавить задачу" : "Редактировать задачу";
+        // РћР±РЅРѕРІР»СЏРµРј Р·Р°РіРѕР»РѕРІРѕРє РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЂРµР¶РёРјР° (РґРѕР±Р°РІР»РµРЅРёРµ/СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ)
+        Title = reminder.Id == 0 ? "Р”РѕР±Р°РІРёС‚СЊ Р·Р°РґР°С‡Сѓ" : "Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ Р·Р°РґР°С‡Сѓ";
+        DeleteButton.IsVisible = reminder.Id != 0; // рџ”№ РџРѕРєР°Р·С‹РІР°РµРј РєРЅРѕРїРєСѓ С‚РѕР»СЊРєРѕ РґР»СЏ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… Р·Р°РґР°С‡
     }
 
     private void SetUrgencyPicker(Urgency urgency)
     {
         string urgencyText = urgency switch
         {
-            Urgency.Low => "Низкий",
-            Urgency.Medium => "Средний",
-            Urgency.High => "Высокий",
-            _ => "Средний"
+            Urgency.Low => "РќРёР·РєРёР№",
+            Urgency.Medium => "РЎСЂРµРґРЅРёР№",
+            Urgency.High => "Р’С‹СЃРѕРєРёР№",
+            _ => "РЎСЂРµРґРЅРёР№"
         };
 
         UrgencyPicker.SelectedItem = urgencyText;
@@ -54,9 +55,9 @@ public partial class ReminderDetailPage : ContentPage
     {
         return urgencyText switch
         {
-            "Низкий" => Urgency.Low,
-            "Средний" => Urgency.Medium,
-            "Высокий" => Urgency.High,
+            "РќРёР·РєРёР№" => Urgency.Low,
+            "РЎСЂРµРґРЅРёР№" => Urgency.Medium,
+            "Р’С‹СЃРѕРєРёР№" => Urgency.High,
             _ => Urgency.Medium
         };
     }
@@ -65,14 +66,14 @@ public partial class ReminderDetailPage : ContentPage
     {
         if (BindingContext is not Reminder reminder) return;
 
-        // Валидация - проверяем, что название задачи заполнено
+        // Р’Р°Р»РёРґР°С†РёСЏ - РїСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РЅР°Р·РІР°РЅРёРµ Р·Р°РґР°С‡Рё Р·Р°РїРѕР»РЅРµРЅРѕ
         if (string.IsNullOrWhiteSpace(reminder.Name))
         {
-            await DisplayAlert("Ошибка", "Пожалуйста, введите название задачи", "OK");
+            await DisplayAlert("РћС€РёР±РєР°", "РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІРІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ Р·Р°РґР°С‡Рё", "OK");
             return;
         }
 
-        // Получаем уровень срочности из Picker
+        // РџРѕР»СѓС‡Р°РµРј СѓСЂРѕРІРµРЅСЊ СЃСЂРѕС‡РЅРѕСЃС‚Рё РёР· Picker
         if (UrgencyPicker.SelectedItem is string selectedUrgency)
         {
             reminder.Urgency = GetUrgencyFromString(selectedUrgency);
@@ -82,27 +83,47 @@ public partial class ReminderDetailPage : ContentPage
             reminder.Urgency = Urgency.Medium;
         }
 
-        // Комбинируем дату и время
+        // РљРѕРјР±РёРЅРёСЂСѓРµРј РґР°С‚Сѓ Рё РІСЂРµРјСЏ
         var date = ReminderDatePicker.Date;
         var time = ReminderTimePicker.Time;
         reminder.ReminderDate = date + time;
 
-        // Сохраняем задачу
-        await App.Database.SaveReminderAsync(reminder);
+        // РЎРѕС…СЂР°РЅСЏРµРј Р·Р°РґР°С‡Сѓ
+        //await App.Database.SaveReminderAsync(reminder);
+        await App.Database.CreateReminderAsync(reminder);
 
-        // Показываем сообщение об успехе
-        await DisplayAlert("Успех", "Задача успешно сохранена", "OK");
+        // РџРѕРєР°Р·С‹РІР°РµРј СЃРѕРѕР±С‰РµРЅРёРµ РѕР± СѓСЃРїРµС…Рµ
+        await DisplayAlert("РЈСЃРїРµС…", "Р—Р°РґР°С‡Р° СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅР°", "OK");
 
-        // Возвращаемся на список задач
-        await Shell.Current.GoToAsync("//Reminders");
+        // рџ”№ РћС‡РёС‰Р°РµРј РІСЃРµ РїРѕР»СЏ РїРѕСЃР»Рµ СЃРѕС…СЂР°РЅРµРЅРёСЏ (add)
+        ClearForm();
+
+        // Р’РѕР·РІСЂР°С‰Р°РµРјСЃСЏ РЅР° СЃРїРёСЃРѕРє Р·Р°РґР°С‡
+        await Shell.Current.GoToAsync("//Reminders");     
     }
+
+    private void ClearForm() //add
+    {
+        // РЎРѕР·РґР°С‘Рј РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ Рё РїСЂРёРІСЏР·С‹РІР°РµРј Рє РєРѕРЅС‚РµРєСЃС‚Сѓ
+        BindingContext = new Reminder
+        {
+            ReminderDate = DateTime.Now,
+            IsDone = false
+        };
+
+        // РЎР±СЂР°СЃС‹РІР°РµРј РІРёР·СѓР°Р»СЊРЅС‹Рµ СЌР»РµРјРµРЅС‚С‹
+        UrgencyPicker.SelectedItem = null;
+        ReminderDatePicker.Date = DateTime.Now;
+        ReminderTimePicker.Time = new TimeSpan(DateTime.Now.Hour, DateTime.Now.Minute, 0);
+    }
+
 
     async void OnCancelClicked(object sender, EventArgs e)
     {
-        // Подтверждение отмены
-        bool confirm = await DisplayAlert("Подтверждение",
-            "Отменить создание задачи? Все несохраненные данные будут потеряны.",
-            "Да", "Нет");
+        // РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РѕС‚РјРµРЅС‹
+        bool confirm = await DisplayAlert("РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ",
+            "РћС‚РјРµРЅРёС‚СЊ СЃРѕР·РґР°РЅРёРµ Р·Р°РґР°С‡Рё? Р’СЃРµ РЅРµСЃРѕС…СЂР°РЅРµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ Р±СѓРґСѓС‚ РїРѕС‚РµСЂСЏРЅС‹.",
+            "Р”Р°", "РќРµС‚");
 
         if (confirm)
         {
@@ -114,179 +135,11 @@ public partial class ReminderDetailPage : ContentPage
     {
         if (BindingContext is not Reminder reminder) return;
 
-        bool confirm = await DisplayAlert("Удалить", "Удалить эту задачу?", "Да", "Нет");
+        bool confirm = await DisplayAlert("РЈРґР°Р»РёС‚СЊ", "РЈРґР°Р»РёС‚СЊ СЌС‚Сѓ Р·Р°РґР°С‡Сѓ?", "Р”Р°", "РќРµС‚");
         if (!confirm) return;
 
         await App.Database.DeleteReminderAsync(reminder);
         await Shell.Current.GoToAsync("//Reminders");
     }
 }
-
-
-
-
-
-//namespace ReminderApp;
-
-//public partial class ReminderDetailPage : ContentPage
-//{
-//    public ReminderDetailPage()
-//    {
-//        InitializeComponent();
-
-//        // Инициализация Picker с русскими названиями
-//        var urgencyOptions = new List<string> { "Низкий", "Средний", "Высокий" };
-//        UrgencyPicker.ItemsSource = urgencyOptions;
-//    }
-
-//    protected override void OnAppearing()
-//    {
-//        base.OnAppearing();
-
-//        if (BindingContext == null || ((Reminder)BindingContext).Id != 0 && Shell.Current.CurrentItem.Title == "Добавить")
-//        {
-//            BindingContext = new Reminder
-//            {
-//                ReminderDate = DateTime.Now,
-//                IsDone = false
-//            };
-//        }
-
-//        var reminder = (Reminder)BindingContext;
-
-//        // Скрываем кнопку удаления для новой задачи
-//        // DeleteButton.IsVisible = reminder.Id != 0;
-
-//        // Устанавливаем выбранный уровень срочности
-//        SetUrgencyPicker(reminder.Urgency);
-
-//        ReminderDatePicker.Date = reminder.ReminderDate.Date;
-//        // ReminderTimePicker.Time = reminder.ReminderDate.TimeOfDay;
-//    }
-
-//    private void SetUrgencyPicker(Urgency urgency)
-//    {
-//        string urgencyText = urgency switch
-//        {
-//            Urgency.Low => "Низкий",
-//            Urgency.Medium => "Средний",
-//            Urgency.High => "Высокий",
-//            _ => "Средний"
-//        };
-
-//        UrgencyPicker.SelectedItem = urgencyText;
-//    }
-
-//    private Urgency GetUrgencyFromString(string urgencyText)
-//    {
-//        return urgencyText switch
-//        {
-//            "Низкий" => Urgency.Low,
-//            "Средний" => Urgency.Medium,
-//            "Высокий" => Urgency.High,
-//            _ => Urgency.Medium
-//        };
-//    }
-
-//    async void OnSaveClicked(object sender, EventArgs e)
-//    {
-//        if (BindingContext is not Reminder reminder) return;
-
-//        // Получаем уровень срочности из Picker
-//        if (UrgencyPicker.SelectedItem is string selectedUrgency)
-//        {
-//            reminder.Urgency = GetUrgencyFromString(selectedUrgency);
-//        }
-//        else
-//        {
-//            reminder.Urgency = Urgency.Medium;
-//        }
-
-//        var date = ReminderDatePicker.Date;
-//        // var time = ReminderTimePicker.Time;
-//        reminder.ReminderDate = date; // + time;
-
-//        await App.Database.SaveReminderAsync(reminder);
-//        await Shell.Current.GoToAsync("//Reminders");
-//    }
-
-//    async void OnCancelClicked(object sender, EventArgs e)
-//    {
-//        await Shell.Current.GoToAsync("//Reminders");
-//    }
-
-//    async void OnDeleteClicked(object sender, EventArgs e)
-//    {
-//        if (BindingContext is not Reminder reminder) return;
-
-//        bool confirm = await DisplayAlert("Удалить", "Удалить эту задачу?", "Да", "Нет");
-//        if (!confirm) return;
-
-//        await App.Database.DeleteReminderAsync(reminder);
-//        await Shell.Current.GoToAsync("//Reminders");
-//    }
-//}
-
-
-//namespace ReminderApp;
-
-//public partial class ReminderDetailPage : ContentPage
-//{
-//	public ReminderDetailPage()
-//	{
-//		InitializeComponent();
-//		UrgencyPicker.ItemsSource = Enum.GetValues(typeof(Urgency)).Cast<Urgency>().ToList();
-//	}
-
-//	protected override void OnAppearing()
-//	{
-//		base.OnAppearing();
-
-//		if(BindingContext == null || ((Reminder)BindingContext).Id != 0 && Shell.Current.CurrentItem.Title == "Add")
-//		{
-//			BindingContext = new Reminder
-//			{
-//				ReminderDate = DateTime.Now,
-//				IsDone = false
-//			};
-//		}
-
-//		var reminder = (Reminder)BindingContext;
-
-//		DeleteButton.IsVisible = reminder.Id != 0;
-
-//		UrgencyPicker.SelectedItem = reminder.Urgency;
-//		ReminderDatePicker.Date = reminder.ReminderDate.Date;
-//		ReminderTimePicker.Time = reminder.ReminderDate.TimeOfDay;
-
-//		Title = reminder.Id == 0 ? "Add Reminder" : "Edit Reminder";
-//	}
-
-
-//	async void OnSaveClicked(object sender, EventArgs e)
-//	{
-//		if(BindingContext is not Reminder reminder) return;
-
-//		reminder.Urgency = (Urgency)(UrgencyPicker.SelectedItem ?? Urgency.Medium);
-
-//		var date = ReminderDatePicker.Date;
-//		var time = ReminderTimePicker.Time;
-//		reminder.ReminderDate = date + time;
-
-//		await App.Database.SaveReminderAsync(reminder);
-//		await Shell.Current.GoToAsync("//Reminders");
-//	}
-
-//	async void OnDeleteClicked(object sender, EventArgs e)
-//	{
-//		if(BindingContext is not Reminder reminder) return;
-
-//		bool confirm = await DisplayAlert("Delete", "Delete this reminder?", "Yes", "No");
-//		if(!confirm) return;
-
-//		await App.Database.DeleteReminderAsync(reminder);
-
-//		await Shell.Current.GoToAsync("//Reminders");
-//	}
-//}
 

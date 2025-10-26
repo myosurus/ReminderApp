@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="ReminderApp.ReminderListPage"
     Title="Задачи"
-    BackgroundColor="White">
+    BackgroundColor="#F7EAFB">
 
     <Grid Padding="20">
         <Grid.RowDefinitions>
@@ -54,7 +54,7 @@
                 <DataTemplate>
                     <Grid Padding="15,10" 
                           ColumnDefinitions="Auto,*,Auto,Auto"
-                          BackgroundColor="White"
+                          BackgroundColor="#FDFCFD"
                           Margin="0,1">
 
                         <!-- Индикатор срочности -->
@@ -106,54 +106,4 @@
         </CollectionView>
     </Grid>
 </ContentPage>
-
-
-
-
-<!--<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="ReminderApp.ReminderListPage"
-    Title="Задачи"
-    BackgroundColor="White">
-
-    <Grid Padding="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        --><!-- Верхнее уведомление --><!--
-        <VerticalStackLayout Grid.Row="0" Spacing="2">
-            <Label Text="🔔 Напоминания о задачах"
-                   FontAttributes="Bold"
-                   FontSize="14"
-                   TextColor="#333"/>
-            <Label Text="Не упускайте важные задачи"
-                   FontSize="12"
-                   TextColor="#777"/>
-        </VerticalStackLayout>
-
-        --><!-- Основной контент --><!--
-        <VerticalStackLayout Grid.Row="1"
-                             VerticalOptions="CenterAndExpand"
-                             HorizontalOptions="CenterAndExpand"
-                             Spacing="10">
-            <Image Source="clock_icon.png"
-                   HeightRequest="50"
-                   WidthRequest="50"
-                   Aspect="AspectFit"/>
-            <Label Text="Задачи не найдены"
-                   FontAttributes="Bold"
-                   FontSize="14"
-                   TextColor="#777"
-                   HorizontalTextAlignment="Center"/>
-            <Label Text="Добавьте первую задачу"
-                   FontSize="12"
-                   TextColor="#999"
-                   HorizontalTextAlignment="Center"/>
-        </VerticalStackLayout>
-    </Grid>
-</ContentPage>-->
 

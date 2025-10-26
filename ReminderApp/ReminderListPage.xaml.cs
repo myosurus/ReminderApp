@@ -1,4 +1,4 @@
-using System.Windows.Input;
+п»їusing System.Windows.Input;
 
 namespace ReminderApp;
 
@@ -32,11 +32,26 @@ public partial class ReminderListPage : ContentPage
 
     private async Task LoadReminders()
     {
+        //var reminders = await App.Database.GetRemindersAsync();
+
+        //if (reminders != null && reminders.Any())
+        //{
+        //    var reminderItems = reminders.Select(r => new ReminderItem(r)).ToList();
+        //    RemindersCollectionView.ItemsSource = reminderItems;
+        //}
+        //else
+        //{
+        //    RemindersCollectionView.ItemsSource = null;
+        //}
+
         var reminders = await App.Database.GetRemindersAsync();
 
         if (reminders != null && reminders.Any())
         {
-            var reminderItems = reminders.Select(r => new ReminderItem(r)).ToList();
+            // рџ”№ РџРѕРєР°Р·С‹РІР°РµРј С‚РѕР»СЊРєРѕ РЅРµРІС‹РїРѕР»РЅРµРЅРЅС‹Рµ Р·Р°РґР°С‡Рё
+            var activeReminders = reminders.Where(r => !r.IsDone).ToList();
+
+            var reminderItems = activeReminders.Select(r => new ReminderItem(r)).ToList();
             RemindersCollectionView.ItemsSource = reminderItems;
         }
         else
@@ -49,13 +64,13 @@ public partial class ReminderListPage : ContentPage
     {
         if (e.CurrentSelection.FirstOrDefault() is ReminderItem selectedReminder)
         {
-            // Переходим к редактированию задачи
+            // РџРµСЂРµС…РѕРґРёРј Рє СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЋ Р·Р°РґР°С‡Рё
             await Navigation.PushAsync(new ReminderDetailPage
             {
                 BindingContext = selectedReminder.Reminder
             });
 
-            // Снимаем выделение
+            // РЎРЅРёРјР°РµРј РІС‹РґРµР»РµРЅРёРµ
             RemindersCollectionView.SelectedItem = null;
         }
     }
@@ -64,17 +79,17 @@ public partial class ReminderListPage : ContentPage
     {
         if (sender is CheckBox checkBox && checkBox.BindingContext is ReminderItem reminderItem)
         {
-            // Обновляем статус задачи в базе данных
+            // РћР±РЅРѕРІР»СЏРµРј СЃС‚Р°С‚СѓСЃ Р·Р°РґР°С‡Рё РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
             reminderItem.Reminder.IsDone = e.Value;
             await App.Database.SaveReminderAsync(reminderItem.Reminder);
 
-            // Перезагружаем список для обновления цветов
+            // РџРµСЂРµР·Р°РіСЂСѓР¶Р°РµРј СЃРїРёСЃРѕРє РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ С†РІРµС‚РѕРІ
             await LoadReminders();
         }
     }
 }
 
-// Класс-обертка для отображения задач с дополнительными свойствами
+// РљР»Р°СЃСЃ-РѕР±РµСЂС‚РєР° РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ Р·Р°РґР°С‡ СЃ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹РјРё СЃРІРѕР№СЃС‚РІР°РјРё
 public class ReminderItem
 {
     public Reminder Reminder { get; set; }
@@ -101,44 +116,4 @@ public class ReminderItem
 
     public Color OverdueColor => IsOverdue ? Color.FromArgb("#F44336") : Colors.Transparent;
 }
-
-
-
-//using System.Windows.Input;
-
-//namespace ReminderApp;
-
-//public partial class ReminderListPage : ContentPage
-//{
-//	public ICommand ItemTappedCommand { get; }
-
-//	public ReminderListPage()
-//	{
-//		InitializeComponent();
-
-//		ItemTappedCommand = new Command<Reminder>(async (reminder) =>
-//		{
-//			if(reminder == null)
-//				return;
-
-//			await Navigation.PushAsync(new ReminderDetailPage
-//			{
-//				BindingContext = reminder
-//			});
-//		});
-
-//		BindingContext = this;
-//	}
-
-//    protected override async void OnAppearing()
-//    {
-//        base.OnAppearing();
-
-//        var reminders = await App.Database.GetRemindersAsync();
-
-//        // Здесь можно потом добавить отображение задач, если появятся
-//        if (reminders == null || !reminders.Any())
-//            return;
-//    }
-//}
 
