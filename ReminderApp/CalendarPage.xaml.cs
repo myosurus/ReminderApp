@@ -29,100 +29,175 @@ public partial class CalendarPage : ContentPage
     }
 
 
+
+    //private void UpdateCalendar()
+    //{
+    //    // Очистить старое содержимое
+    //    CalendarGrid.Children.Clear();
+
+    //    // Заголовок месяца
+    //    MonthYearLabel.Text = _currentMonth.ToString("MMMM yyyy", new CultureInfo("ru-RU"));
+
+    //    // Первый день месяца
+    //    var firstDayOfMonth = new DateTime(_currentMonth.Year, _currentMonth.Month, 1);
+
+    //    // День недели первого дня месяца (понедельник — первый)
+    //    int offset = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;
+
+    //    // Начальная дата для календаря
+    //    var startDate = firstDayOfMonth.AddDays(-offset);
+
+    //    // Заполняем сетку датами (6 строк × 7 столбцов)
+    //    for (int row = 0; row < 6; row++)
+    //    {
+    //        for (int col = 0; col < 7; col++)
+    //        {
+    //            var date = startDate.AddDays(row * 7 + col);
+
+    //            // Все напоминания на эту дату
+    //            var dayReminders = _allReminders?
+    //                .Where(r => r.ReminderDate.Date == date.Date)
+    //                .ToList();
+
+    //            // Кнопка дня
+    //            var dayButton = new Button
+    //            {
+    //                Text = date.Day.ToString(),
+    //                FontSize = 14,
+    //                Padding = new Thickness(0),
+    //                HorizontalOptions = LayoutOptions.Center,
+    //                VerticalOptions = LayoutOptions.Center,
+    //                BackgroundColor = Colors.Transparent,
+    //                TextColor = GetDayTextColor(date, dayReminders),
+    //                WidthRequest = 40,
+    //                HeightRequest = 40,
+    //                CornerRadius = 20
+    //            };
+
+    //            // Подсветка выбранного дня
+    //            if (_selectedDate.HasValue && date.Date == _selectedDate.Value.Date)
+    //            {
+    //                dayButton.BorderColor = Colors.DeepSkyBlue;
+    //                dayButton.BorderWidth = 2;
+    //            }
+
+    //            // Обработка клика
+    //            dayButton.Clicked += (s, e) => OnDaySelected(date);
+
+    //            // Контейнер для кнопки и индикаторов
+    //            var dayContainer = new VerticalStackLayout
+    //            {
+    //                Spacing = 2,
+    //                HorizontalOptions = LayoutOptions.Center,
+    //                VerticalOptions = LayoutOptions.Center
+    //            };
+
+    //            dayContainer.Children.Add(dayButton);
+
+    //            // Индикаторы задач под числом
+    //            var taskIndicators = CreateTaskIndicators(dayReminders);
+    //            if (taskIndicators != null)
+    //                dayContainer.Children.Add(taskIndicators);
+
+    //            // Добавляем день в сетку
+    //            CalendarGrid.Add(dayContainer, col, row + 1);
+    //        }
+    //    }
+    //}
+
     private void UpdateCalendar()
     {
-        // Обновляем заголовок
+        // Очистить старое содержимое
+        CalendarGrid.Children.Clear();
+
+        // Заголовок месяца
         MonthYearLabel.Text = _currentMonth.ToString("MMMM yyyy", new CultureInfo("ru-RU"));
 
-        // Очищаем календарную сетку
-        CalendarGrid.Children.Clear();
-        CalendarGrid.RowDefinitions.Clear();
+        // Первый день месяца
+        var firstDayOfMonth = new DateTime(_currentMonth.Year, _currentMonth.Month, 1);
 
-        // Добавляем 6 строк для календаря
-        for (int i = 0; i < 6; i++)
+        // День недели первого дня месяца (понедельник — первый)
+        int offset = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;
+
+        // Начальная дата для календаря (понедельник первой недели)
+        var startDate = firstDayOfMonth.AddDays(-offset);
+
+        // Заполняем сетку датами (6 строк × 7 столбцов)
+        for (int row = 0; row < 6; row++)
         {
-            CalendarGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Star });
-        }
-
-        // Получаем первый день месяца и количество дней
-        var firstDay = _currentMonth;
-        var daysInMonth = DateTime.DaysInMonth(_currentMonth.Year, _currentMonth.Month);
-        var startDay = (int)firstDay.DayOfWeek;
-
-        // Заполняем календарь
-        int row = 0;
-        int col = startDay;
-
-        for (int day = 1; day <= daysInMonth; day++)
-        {
-            var currentDate = new DateTime(_currentMonth.Year, _currentMonth.Month, day);
-            var dayReminders = _allReminders?.Where(r => r.ReminderDate.Date == currentDate.Date).ToList();
-
-            // Создаем контейнер для дня
-            var dayContainer = new Grid
+            for (int col = 0; col < 7; col++)
             {
-                HeightRequest = 45,
-                WidthRequest = 45
-            };
+                var date = startDate.AddDays(row * 7 + col);
 
-            // Кнопка дня
-            var dayButton = new Button
-            {
-                Text = day.ToString(),
-                FontSize = 14,
-                BackgroundColor = Colors.Transparent,
-                TextColor = GetDayTextColor(currentDate, dayReminders),
-                BorderWidth = 0,
-                CornerRadius = 22,
-                HorizontalOptions = LayoutOptions.Center, // ИСПРАВЛЕНО
-                VerticalOptions = LayoutOptions.Center,   // ИСПРАВЛЕНО
-                HeightRequest = 40,
-                WidthRequest = 40
-            };
+                // Все напоминания на эту дату
+                var dayReminders = _allReminders?
+                    .Where(r => r.ReminderDate.Date == date.Date)
+                    .ToList();
 
-            dayButton.Clicked += (s, e) => OnDaySelected(currentDate);
+                // Определяем цвет текста
+                Color textColor;
+                if (date.Month != _currentMonth.Month)
+                {
+                    // День не из текущего месяца → делаем светло-серым
+                    textColor = Color.FromArgb("#CCCCCC");
+                }
+                else
+                {
+                    // Цвет для дней текущего месяца
+                    textColor = GetDayTextColor(date, dayReminders);
+                }
 
-            // Выделяем выбранный день
-            if (_selectedDate?.Date == currentDate.Date)
-            {
-                dayButton.BackgroundColor = Color.FromArgb("#E3F2FD");
-                dayButton.TextColor = Color.FromArgb("#1976D2");
-                dayButton.FontAttributes = FontAttributes.Bold;
-            }
+                // Кнопка дня
+                var dayButton = new Button
+                {
+                    Text = date.Day.ToString(),
+                    FontSize = 14,
+                    Padding = new Thickness(0),
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center,
+                    BackgroundColor = Colors.Transparent,
+                    TextColor = textColor,
+                    WidthRequest = 40,
+                    HeightRequest = 40,
+                    CornerRadius = 20
+                };
 
-            // Выделяем сегодняшний день
-            if (currentDate.Date == DateTime.Today)
-            {
-                dayButton.BorderColor = Color.FromArgb("#1976D2");
-                dayButton.BorderWidth = 2;
-            }
+                // Подсветка выбранного дня
+                if (_selectedDate.HasValue && date.Date == _selectedDate.Value.Date)
+                {
+                    dayButton.BorderColor = Colors.DeepSkyBlue;
+                    dayButton.BorderWidth = 2;
+                }
 
-            dayContainer.Children.Add(dayButton);
+                // Обработка клика
+                dayButton.Clicked += (s, e) => OnDaySelected(date);
 
-            // Добавляем индикаторы задач
-            var indicators = CreateTaskIndicators(dayReminders);
-            if (indicators != null)
-            {
-                var mainStack = new VerticalStackLayout { Spacing = 2 };
-                mainStack.Children.Add(dayContainer);
-                mainStack.Children.Add(indicators);
+                // Контейнер для кнопки и индикаторов
+                var dayContainer = new VerticalStackLayout
+                {
+                    Spacing = 2,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center
+                };
 
-                CalendarGrid.Add(mainStack, col, row);
-            }
-            else
-            {
-                CalendarGrid.Add(dayContainer, col, row);
-            }
+                dayContainer.Children.Add(dayButton);
 
-            // Переход на следующую строку
-            col++;
-            if (col > 6)
-            {
-                col = 0;
-                row++;
+                // Индикаторы задач под числом (только для текущего месяца)
+                if (date.Month == _currentMonth.Month)
+                {
+                    var taskIndicators = CreateTaskIndicators(dayReminders);
+                    if (taskIndicators != null)
+                        dayContainer.Children.Add(taskIndicators);
+                }
+
+                // Добавляем день в сетку
+                CalendarGrid.Add(dayContainer, col, row + 1);
             }
         }
     }
+
+
+
 
     private Color GetDayTextColor(DateTime date, List<Reminder> reminders)
     {

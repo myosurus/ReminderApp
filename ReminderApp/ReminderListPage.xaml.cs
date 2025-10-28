@@ -24,7 +24,7 @@ public partial class ReminderListPage : ContentPage
         BindingContext = this;
     }
 
-    protected override async void OnAppearing()
+    protected override async void OnAppearing() //загрузка бд
     {
         base.OnAppearing();
         await LoadReminders();
@@ -32,18 +32,6 @@ public partial class ReminderListPage : ContentPage
 
     private async Task LoadReminders()
     {
-        //var reminders = await App.Database.GetRemindersAsync();
-
-        //if (reminders != null && reminders.Any())
-        //{
-        //    var reminderItems = reminders.Select(r => new ReminderItem(r)).ToList();
-        //    RemindersCollectionView.ItemsSource = reminderItems;
-        //}
-        //else
-        //{
-        //    RemindersCollectionView.ItemsSource = null;
-        //}
-
         var reminders = await App.Database.GetRemindersAsync();
 
         if (reminders != null && reminders.Any())
@@ -60,7 +48,7 @@ public partial class ReminderListPage : ContentPage
         }
     }
 
-    private async void OnReminderSelected(object sender, SelectionChangedEventArgs e)
+    private async void OnReminderSelected(object sender, SelectionChangedEventArgs e) 
     {
         if (e.CurrentSelection.FirstOrDefault() is ReminderItem selectedReminder)
         {
@@ -75,7 +63,7 @@ public partial class ReminderListPage : ContentPage
         }
     }
 
-    private async void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e)
+    private async void OnCheckBoxCheckedChanged(object sender, CheckedChangedEventArgs e) 
     {
         if (sender is CheckBox checkBox && checkBox.BindingContext is ReminderItem reminderItem)
         {
