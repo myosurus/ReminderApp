@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:ReminderApp.ViewModels"
+             xmlns:converters="clr-namespace:ReminderApp.Converters"
              x:Class="ReminderApp.Views.CalendarView"
              Title="Календарь"
              BackgroundColor="#F7EAFB">
@@ -10,15 +11,20 @@
 		<viewmodels:CalendarViewModel />
 	</ContentPage.BindingContext>
 
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+			<converters:MonthTextColorConverter x:Key="MonthTextColorConverter"/>
+		</ResourceDictionary>
+	</ContentPage.Resources>
+
 	<ScrollView>
 		<VerticalStackLayout Padding="20" Spacing="20">
 
 			<!-- Заголовок -->
-			<VerticalStackLayout Spacing="5">
-				<Label Text="Посмотрите, что запланировано на месяц."
-                       FontSize="14"
-                       TextColor="#666666"/>
-			</VerticalStackLayout>
+			<Label Text="Посмотрите, что запланировано на месяц."
+                   FontSize="14"
+                   TextColor="#666666"/>
 
 			<!-- Навигация по месяцам -->
 			<Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
@@ -28,7 +34,6 @@
                         FontAttributes="Bold"
                         TextColor="#007AFF"
                         BackgroundColor="Transparent"
-                        BorderWidth="0"
                         Command="{Binding PrevMonthCommand}"
                         WidthRequest="40"
                         HeightRequest="40"/>
@@ -47,22 +52,53 @@
                         FontAttributes="Bold"
                         TextColor="#007AFF"
                         BackgroundColor="Transparent"
-                        BorderWidth="0"
                         Command="{Binding NextMonthCommand}"
                         WidthRequest="40"
                         HeightRequest="40"/>
 			</Grid>
 
-			<!-- Календарная сетка -->
+			<!-- Сетка календаря -->
 			<Border Stroke="#E0E0E0"
                     StrokeThickness="1"
                     BackgroundColor="White"
                     Padding="10">
-				<Grid x:Name="CalendarGrid"
-                      ColumnDefinitions="*,*,*,*,*,*,*"
-                      RowDefinitions="Auto,*,*,*,*,*"
-                      RowSpacing="1"
-                      ColumnSpacing="1"/>
+				<CollectionView ItemsSource="{Binding CalendarDays}"
+                                SelectionMode="None"
+                                ItemsLayout="VerticalGrid, 7"
+                                Margin="0"
+                                VerticalOptions="Start">
+
+					<CollectionView.ItemTemplate>
+						<DataTemplate>
+							<Frame Padding="5"
+                                   Margin="2"
+                                   CornerRadius="8"
+                                   HasShadow="False"
+                                   BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}}">
+								<VerticalStackLayout HorizontalOptions="Center"
+                                                     VerticalOptions="Center">
+									<Label Text="{Binding Date.Day}"
+                                           FontSize="14"
+                                           TextColor="{Binding IsCurrentMonth, Converter={StaticResource MonthTextColorConverter}}"
+                                           HorizontalOptions="Center"/>
+
+									<BoxView HeightRequest="4"
+                                             WidthRequest="4"
+                                             CornerRadius="2"
+                                             BackgroundColor="#007AFF"
+                                             IsVisible="{Binding HasReminders}"
+                                             HorizontalOptions="Center"/>
+								</VerticalStackLayout>
+
+								<Frame.GestureRecognizers>
+									<TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:CalendarViewModel}}, Path=SelectDateCommand}"
+                                        CommandParameter="{Binding .}" />
+								</Frame.GestureRecognizers>
+							</Frame>
+						</DataTemplate>
+					</CollectionView.ItemTemplate>
+				</CollectionView>
 			</Border>
 
 			<!-- Задачи на выбранный день -->
@@ -73,36 +109,19 @@
                        FontAttributes="Bold"
                        TextColor="#333333"/>
 
-				<CollectionView ItemsSource="{Binding DayTasks}">
+				<CollectionView ItemsSource="{Binding DayTasks}"
+                                SelectionMode="None">
 					<CollectionView.ItemTemplate>
 						<DataTemplate>
-							<Grid Padding="10"
-                                  ColumnDefinitions="Auto,*,Auto"
-                                  BackgroundColor="#F8F9FA"
-                                  Margin="0,2">
-
-								<Frame Grid.Column="0"
-                                       BackgroundColor="{Binding Color}"
-                                       HeightRequest="12"
-                                       WidthRequest="12"
-                                       Padding="0"
-                                       HasShadow="False"
-                                       CornerRadius="6"
-                                       VerticalOptions="Center"/>
-
-								<Label Grid.Column="1"
-                                       Text="{Binding Name}"
+							<Frame Padding="10"
+                                   Margin="4,2"
+                                   CornerRadius="8"
+                                   HasShadow="False"
+                                   BackgroundColor="{Binding Color}">
+								<Label Text="{Binding Name}"
                                        FontSize="14"
-                                       TextColor="#333333"
-                                       VerticalOptions="Center"
-                                       Margin="10,0,0,0"/>
-
-								<Label Grid.Column="2"
-                                       Text="{Binding Time}"
-                                       FontSize="12"
-                                       TextColor="#666666"
-                                       VerticalOptions="Center"/>
-							</Grid>
+                                       TextColor="White"/>
+							</Frame>
 						</DataTemplate>
 					</CollectionView.ItemTemplate>
 				</CollectionView>
@@ -126,8 +145,6 @@
                        TextColor="#333333"/>
 
 				<Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*" RowSpacing="8">
-
-					<!-- Текущие / невыполненные задачи -->
 					<Frame Grid.Row="0" Grid.Column="0"
                            BackgroundColor="#4CAF50"
                            HeightRequest="16"
@@ -142,7 +159,6 @@
                            VerticalTextAlignment="Center"
                            Margin="10,0,0,0"/>
 
-					<!-- Выполненные задачи -->
 					<Frame Grid.Row="1" Grid.Column="0"
                            BackgroundColor="#BDBDBD"
                            HeightRequest="16"

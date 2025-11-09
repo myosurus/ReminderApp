@@ -12,18 +12,18 @@
             Title="Задачи"
             Icon="tasks.png"
             Route="Reminders"
-            ContentTemplate="{DataTemplate local:ReminderListPage}" />
+            ContentTemplate="{DataTemplate local:Views.ListView}" />
 
-        <ShellContent
+		<ShellContent
             Title="Добавить"
             Icon="add.png"
             Route="Add"
-            ContentTemplate="{DataTemplate local:ReminderDetailPage}" />
+            ContentTemplate="{DataTemplate local:Views.DetailView}" />
 
-        <ShellContent
+		<ShellContent
             Title="Календарь"
             Icon="calendar.png"
             Route="Calendar"
-            ContentTemplate="{DataTemplate local:CalendarPage}" />
+            ContentTemplate="{DataTemplate local:Views.CalendarView}" />
     </TabBar>
 </Shell>

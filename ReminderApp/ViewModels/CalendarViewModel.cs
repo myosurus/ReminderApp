@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows.Input;
 using ReminderApp.Models;
+using ReminderApp.Views;
 
 namespace ReminderApp.ViewModels;
 
@@ -15,6 +16,7 @@ public class CalendarViewModel : BaseViewModel
 
 	public ObservableCollection<Reminder> AllReminders { get; set; } = new();
 	public ObservableCollection<TaskItem> DayTasks { get; set; } = new();
+	public ObservableCollection<CalendarDay> CalendarDays { get; set; } = new();
 
 	public DateTime CurrentMonth
 	{
@@ -65,16 +67,22 @@ public class CalendarViewModel : BaseViewModel
 
 		NextMonthCommand = new Command(async () => await ChangeMonth(1));
 		PrevMonthCommand = new Command(async () => await ChangeMonth(-1));
-		SelectDateCommand = new Command<DateTime>(OnDaySelected);
+		SelectDateCommand = new Command<CalendarDay>(OnDaySelected);
 		AddTaskCommand = new Command(async () => await AddTaskForSelectedDate());
 
-		Task.Run(LoadReminders);
+		_ = InitializeAsync();
+	}
+
+	private async Task InitializeAsync()
+	{
+		await LoadReminders();
 		UpdateCalendar();
 	}
 
 	private async Task LoadReminders()
 	{
 		var reminders = await App.Database.GetRemindersAsync() ?? new List<Reminder>();
+
 		MainThread.BeginInvokeOnMainThread(() =>
 		{
 			AllReminders.Clear();
@@ -88,6 +96,27 @@ public class CalendarViewModel : BaseViewModel
 	private void UpdateCalendar()
 	{
 		MonthYearText = _currentMonth.ToString("MMMM yyyy", new CultureInfo("ru-RU"));
+
+		CalendarDays.Clear();
+
+		DateTime firstOfMonth = new(_currentMonth.Year, _currentMonth.Month, 1);
+		int firstDayOfWeek = ((int)firstOfMonth.DayOfWeek + 6) % 7; // Monday=0
+		DateTime startDate = firstOfMonth.AddDays(-firstDayOfWeek);
+
+		for(int i = 0; i < 42; i++)
+		{
+			DateTime date = startDate.AddDays(i);
+			bool hasReminders = AllReminders.Any(r => r.ReminderDate.Date == date.Date);
+
+			CalendarDays.Add(new CalendarDay
+			{
+				Date = date,
+				IsCurrentMonth = date.Month == _currentMonth.Month,
+				IsToday = date.Date == DateTime.Today,
+				HasReminders = hasReminders,
+				IsSelected = _selectedDate.HasValue && _selectedDate.Value.Date == date.Date
+			});
+		}
 	}
 
 	private async Task ChangeMonth(int delta)
@@ -98,9 +127,16 @@ public class CalendarViewModel : BaseViewModel
 		await LoadReminders();
 	}
 
-	private void OnDaySelected(DateTime date)
+	private void OnDaySelected(CalendarDay day)
 	{
-		SelectedDate = date;
+		if(day == null) return;
+
+		SelectedDate = day.Date;
+
+		foreach(var d in CalendarDays)
+			d.IsSelected = d.Date == day.Date;
+
+		OnPropertyChanged(nameof(CalendarDays));
 	}
 
 	private void LoadTasksForSelectedDate()
@@ -154,10 +190,15 @@ public class CalendarViewModel : BaseViewModel
 			return;
 		}
 
-		var newReminder = new Reminder { ReminderDate = _selectedDate.Value };
-		await Shell.Current.Navigation.PushAsync(new ReminderDetailPage
+		var reminder = new Reminder
 		{
-			BindingContext = newReminder
+			ReminderDate = _selectedDate.Value.Date, 
+			IsDone = false
+		};
+
+		await Shell.Current.GoToAsync(nameof(DetailView), new Dictionary<string, object>
+		{
+			["Reminder"] = reminder
 		});
 	}
 }
