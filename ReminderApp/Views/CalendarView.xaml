@@ -1,12 +1,163 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:ReminderApp.ViewModels"
              x:Class="ReminderApp.Views.CalendarView"
-             Title="CalendarView">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             Title="Календарь"
+             BackgroundColor="#F7EAFB">
+
+	<ContentPage.BindingContext>
+		<viewmodels:CalendarViewModel />
+	</ContentPage.BindingContext>
+
+	<ScrollView>
+		<VerticalStackLayout Padding="20" Spacing="20">
+
+			<!-- Заголовок -->
+			<VerticalStackLayout Spacing="5">
+				<Label Text="Посмотрите, что запланировано на месяц."
+                       FontSize="14"
+                       TextColor="#666666"/>
+			</VerticalStackLayout>
+
+			<!-- Навигация по месяцам -->
+			<Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+				<Button Grid.Column="0"
+                        Text="‹"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        TextColor="#007AFF"
+                        BackgroundColor="Transparent"
+                        BorderWidth="0"
+                        Command="{Binding PrevMonthCommand}"
+                        WidthRequest="40"
+                        HeightRequest="40"/>
+
+				<Label Grid.Column="1"
+                       Text="{Binding MonthYearText}"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="#333333"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"/>
+
+				<Button Grid.Column="2"
+                        Text="›"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        TextColor="#007AFF"
+                        BackgroundColor="Transparent"
+                        BorderWidth="0"
+                        Command="{Binding NextMonthCommand}"
+                        WidthRequest="40"
+                        HeightRequest="40"/>
+			</Grid>
+
+			<!-- Календарная сетка -->
+			<Border Stroke="#E0E0E0"
+                    StrokeThickness="1"
+                    BackgroundColor="White"
+                    Padding="10">
+				<Grid x:Name="CalendarGrid"
+                      ColumnDefinitions="*,*,*,*,*,*,*"
+                      RowDefinitions="Auto,*,*,*,*,*"
+                      RowSpacing="1"
+                      ColumnSpacing="1"/>
+			</Border>
+
+			<!-- Задачи на выбранный день -->
+			<VerticalStackLayout Spacing="10"
+                                 IsVisible="{Binding IsTasksSectionVisible}">
+				<Label Text="{Binding SelectedDateText}"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="#333333"/>
+
+				<CollectionView ItemsSource="{Binding DayTasks}">
+					<CollectionView.ItemTemplate>
+						<DataTemplate>
+							<Grid Padding="10"
+                                  ColumnDefinitions="Auto,*,Auto"
+                                  BackgroundColor="#F8F9FA"
+                                  Margin="0,2">
+
+								<Frame Grid.Column="0"
+                                       BackgroundColor="{Binding Color}"
+                                       HeightRequest="12"
+                                       WidthRequest="12"
+                                       Padding="0"
+                                       HasShadow="False"
+                                       CornerRadius="6"
+                                       VerticalOptions="Center"/>
+
+								<Label Grid.Column="1"
+                                       Text="{Binding Name}"
+                                       FontSize="14"
+                                       TextColor="#333333"
+                                       VerticalOptions="Center"
+                                       Margin="10,0,0,0"/>
+
+								<Label Grid.Column="2"
+                                       Text="{Binding Time}"
+                                       FontSize="12"
+                                       TextColor="#666666"
+                                       VerticalOptions="Center"/>
+							</Grid>
+						</DataTemplate>
+					</CollectionView.ItemTemplate>
+				</CollectionView>
+
+				<Button Text="Добавить задачу на этот день"
+                        BackgroundColor="#007AFF"
+                        TextColor="White"
+                        CornerRadius="5"
+                        HeightRequest="40"
+                        Command="{Binding AddTaskCommand}" />
+			</VerticalStackLayout>
+
+			<!-- Разделитель -->
+			<BoxView HeightRequest="1" Color="#EEEEEE"/>
+
+			<!-- Обозначения -->
+			<VerticalStackLayout Spacing="10">
+				<Label Text="Обозначения:"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="#333333"/>
+
+				<Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*" RowSpacing="8">
+
+					<!-- Текущие / невыполненные задачи -->
+					<Frame Grid.Row="0" Grid.Column="0"
+                           BackgroundColor="#4CAF50"
+                           HeightRequest="16"
+                           WidthRequest="16"
+                           Padding="0"
+                           HasShadow="False"
+                           CornerRadius="8"/>
+					<Label Grid.Row="0" Grid.Column="1"
+                           Text="Невыполненные задачи"
+                           FontSize="12"
+                           TextColor="#333333"
+                           VerticalTextAlignment="Center"
+                           Margin="10,0,0,0"/>
+
+					<!-- Выполненные задачи -->
+					<Frame Grid.Row="1" Grid.Column="0"
+                           BackgroundColor="#BDBDBD"
+                           HeightRequest="16"
+                           WidthRequest="16"
+                           Padding="0"
+                           HasShadow="False"
+                           CornerRadius="8"/>
+					<Label Grid.Row="1" Grid.Column="1"
+                           Text="Выполненные задачи"
+                           FontSize="12"
+                           TextColor="#333333"
+                           VerticalTextAlignment="Center"
+                           Margin="10,0,0,0"/>
+				</Grid>
+			</VerticalStackLayout>
+		</VerticalStackLayout>
+	</ScrollView>
 </ContentPage>
