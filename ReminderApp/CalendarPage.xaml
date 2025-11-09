@@ -120,68 +120,40 @@
                        FontSize="14"
                        FontAttributes="Bold"
                        TextColor="#333333"/>
+                
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*" RowSpacing="8">
 
-                <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*,*,*" RowSpacing="8">
-                    <!--Завтра-->
+                    <!--Текущие / невыполненные задачи-->
                     <Frame Grid.Row="0" Grid.Column="0" 
-                           BackgroundColor="#4CAF50" 
-                           HeightRequest="16" 
-                           WidthRequest="16" 
-                           Padding="0" 
-                           HasShadow="False"
-                           CornerRadius="8"/>
+               BackgroundColor="#4CAF50" 
+               HeightRequest="16" 
+               WidthRequest="16" 
+               Padding="0" 
+               HasShadow="False"
+               CornerRadius="8"/>
                     <Label Grid.Row="0" Grid.Column="1" 
-                           Text="Завтра" 
-                           FontSize="12" 
-                           TextColor="#333333" 
-                           VerticalTextAlignment="Center"
-                           Margin="10,0,0,0"/>
+               Text="Невыполненные задачи" 
+               FontSize="12" 
+               TextColor="#333333" 
+               VerticalTextAlignment="Center"
+               Margin="10,0,0,0"/>
 
-                    <!--Просроченные-->
+                    <!--Выполненные задачи-->
                     <Frame Grid.Row="1" Grid.Column="0" 
-                           BackgroundColor="#F44336" 
-                           HeightRequest="16" 
-                           WidthRequest="16" 
-                           Padding="0" 
-                           HasShadow="False"
-                           CornerRadius="8"/>
+               BackgroundColor="#BDBDBD" 
+               HeightRequest="16" 
+               WidthRequest="16" 
+               Padding="0" 
+               HasShadow="False"
+               CornerRadius="8"/>
                     <Label Grid.Row="1" Grid.Column="1" 
-                           Text="Просроченные" 
-                           FontSize="12" 
-                           TextColor="#333333" 
-                           VerticalTextAlignment="Center"
-                           Margin="10,0,0,0"/>
-
-                    <!--Срочные задачи-->
-                    <Frame Grid.Row="2" Grid.Column="0" 
-                           BackgroundColor="#FF9800" 
-                           HeightRequest="16" 
-                           WidthRequest="16" 
-                           Padding="0" 
-                           HasShadow="False"
-                           CornerRadius="8"/>
-                    <Label Grid.Row="2" Grid.Column="1" 
-                           Text="Срочные задачи" 
-                           FontSize="12" 
-                           TextColor="#333333" 
-                           VerticalTextAlignment="Center"
-                           Margin="10,0,0,0"/>
-
-                    <!--Обычные задачи-->
-                    <Frame Grid.Row="3" Grid.Column="0" 
-                           BackgroundColor="#2196F3" 
-                           HeightRequest="16" 
-                           WidthRequest="16" 
-                           Padding="0" 
-                           HasShadow="False"
-                           CornerRadius="8"/>
-                    <Label Grid.Row="3" Grid.Column="1" 
-                           Text="Обычные задачи" 
-                           FontSize="12" 
-                           TextColor="#333333" 
-                           VerticalTextAlignment="Center"
-                           Margin="10,0,0,0"/>
+               Text="Выполненные задачи" 
+               FontSize="12" 
+               TextColor="#333333" 
+               VerticalTextAlignment="Center"
+               Margin="10,0,0,0"/>
                 </Grid>
+
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

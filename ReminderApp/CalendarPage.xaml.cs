@@ -28,83 +28,6 @@ public partial class CalendarPage : ContentPage
         _allReminders = await App.Database.GetRemindersAsync() ?? new List<Reminder>();
     }
 
-
-
-    //private void UpdateCalendar()
-    //{
-    //    // Очистить старое содержимое
-    //    CalendarGrid.Children.Clear();
-
-    //    // Заголовок месяца
-    //    MonthYearLabel.Text = _currentMonth.ToString("MMMM yyyy", new CultureInfo("ru-RU"));
-
-    //    // Первый день месяца
-    //    var firstDayOfMonth = new DateTime(_currentMonth.Year, _currentMonth.Month, 1);
-
-    //    // День недели первого дня месяца (понедельник — первый)
-    //    int offset = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;
-
-    //    // Начальная дата для календаря
-    //    var startDate = firstDayOfMonth.AddDays(-offset);
-
-    //    // Заполняем сетку датами (6 строк × 7 столбцов)
-    //    for (int row = 0; row < 6; row++)
-    //    {
-    //        for (int col = 0; col < 7; col++)
-    //        {
-    //            var date = startDate.AddDays(row * 7 + col);
-
-    //            // Все напоминания на эту дату
-    //            var dayReminders = _allReminders?
-    //                .Where(r => r.ReminderDate.Date == date.Date)
-    //                .ToList();
-
-    //            // Кнопка дня
-    //            var dayButton = new Button
-    //            {
-    //                Text = date.Day.ToString(),
-    //                FontSize = 14,
-    //                Padding = new Thickness(0),
-    //                HorizontalOptions = LayoutOptions.Center,
-    //                VerticalOptions = LayoutOptions.Center,
-    //                BackgroundColor = Colors.Transparent,
-    //                TextColor = GetDayTextColor(date, dayReminders),
-    //                WidthRequest = 40,
-    //                HeightRequest = 40,
-    //                CornerRadius = 20
-    //            };
-
-    //            // Подсветка выбранного дня
-    //            if (_selectedDate.HasValue && date.Date == _selectedDate.Value.Date)
-    //            {
-    //                dayButton.BorderColor = Colors.DeepSkyBlue;
-    //                dayButton.BorderWidth = 2;
-    //            }
-
-    //            // Обработка клика
-    //            dayButton.Clicked += (s, e) => OnDaySelected(date);
-
-    //            // Контейнер для кнопки и индикаторов
-    //            var dayContainer = new VerticalStackLayout
-    //            {
-    //                Spacing = 2,
-    //                HorizontalOptions = LayoutOptions.Center,
-    //                VerticalOptions = LayoutOptions.Center
-    //            };
-
-    //            dayContainer.Children.Add(dayButton);
-
-    //            // Индикаторы задач под числом
-    //            var taskIndicators = CreateTaskIndicators(dayReminders);
-    //            if (taskIndicators != null)
-    //                dayContainer.Children.Add(taskIndicators);
-
-    //            // Добавляем день в сетку
-    //            CalendarGrid.Add(dayContainer, col, row + 1);
-    //        }
-    //    }
-    //}
-
     private void UpdateCalendar()
     {
         // Очистить старое содержимое
@@ -196,9 +119,6 @@ public partial class CalendarPage : ContentPage
         }
     }
 
-
-
-
     private Color GetDayTextColor(DateTime date, List<Reminder> reminders)
     {
         var today = DateTime.Today;
@@ -215,45 +135,53 @@ public partial class CalendarPage : ContentPage
             return Color.FromArgb("#333333"); // Обычные дни - черный
     }
 
-
     private HorizontalStackLayout CreateTaskIndicators(List<Reminder> reminders)
     {
         if (reminders == null || !reminders.Any())
             return null;
 
+        bool hasIncomplete = reminders.Any(r => !r.IsDone);
+        bool hasCompleted = reminders.Any(r => r.IsDone);
+
+        // Создаём горизонтальный контейнер для точек
         var indicators = new HorizontalStackLayout
         {
-            Spacing = 2,
+            Spacing = 3,
             HorizontalOptions = LayoutOptions.Center,
-            HeightRequest = 4
+            HeightRequest = 6
         };
 
-        // Ограничиваем количество индикаторов
-        var tasksToShow = reminders.Where(r => !r.IsDone).Take(3);
-
-        foreach (var task in tasksToShow)
+        // Не более двух индикаторов
+        if (hasIncomplete)
         {
-            var color = task.Urgency switch
-            {
-                Urgency.High => Color.FromArgb("#FF9800"),
-                Urgency.Medium => Color.FromArgb("#2196F3"),
-                Urgency.Low => Color.FromArgb("#4CAF50"),
-                _ => Color.FromArgb("#2196F3")
-            };
-
             indicators.Children.Add(new Frame
             {
-                BackgroundColor = color,
-                HeightRequest = 4,
-                WidthRequest = 4,
+                BackgroundColor = Color.FromArgb("#4CAF50"), // цвет для незавершённых
+                HeightRequest = 6,
+                WidthRequest = 6,
                 Padding = 0,
                 HasShadow = false,
-                CornerRadius = 2
+                CornerRadius = 3
             });
         }
 
-        return indicators;
+        if (hasCompleted)
+        {
+            indicators.Children.Add(new Frame
+            {
+                BackgroundColor = Color.FromArgb("#BDBDBD"), // цвет для завершённых
+                HeightRequest = 6,
+                WidthRequest = 6,
+                Padding = 0,
+                HasShadow = false,
+                CornerRadius = 3
+            });
+        }
+
+        return indicators.Children.Any() ? indicators : null;
     }
+
+
 
     private async void OnDaySelected(DateTime selectedDate)
     {
