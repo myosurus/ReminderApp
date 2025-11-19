@@ -18,7 +18,7 @@
             Title="Добавить"
             Icon="add.png"
             Route="Add"
-            ContentTemplate="{DataTemplate local:Views.DetailView}" />
+            ContentTemplate="{DataTemplate local:Views.AddView}" />
 
 		<ShellContent
             Title="Календарь"

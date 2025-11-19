@@ -90,9 +90,6 @@ public class ListViewModel : BaseViewModel
 		if(reminderItem == null)
 			return;
 
-		await Shell.Current.GoToAsync(nameof(DetailView), new Dictionary<string, object>
-		{
-			["Reminder"] = reminderItem.Reminder
-		});
+		await Shell.Current.GoToAsync($"{nameof(EditView)}?id={reminderItem.Reminder.Id}");
 	}
 }

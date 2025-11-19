@@ -186,19 +186,14 @@ public class CalendarViewModel : BaseViewModel
 	{
 		if(!_selectedDate.HasValue)
 		{
-			await Shell.Current.DisplayAlert("Выберите дату", "Пожалуйста, выберите день для добавления задачи", "OK");
+			await Shell.Current.DisplayAlert(
+				"Выберите дату",
+				"Пожалуйста, выберите день для добавления задачи",
+				"OK");
 			return;
 		}
 
-		var reminder = new Reminder
-		{
-			ReminderDate = _selectedDate.Value.Date, 
-			IsDone = false
-		};
-
-		await Shell.Current.GoToAsync(nameof(DetailView), new Dictionary<string, object>
-		{
-			["Reminder"] = reminder
-		});
+		await Shell.Current.GoToAsync(
+			$"{nameof(AddView)}?date={_selectedDate.Value:yyyy-MM-dd}");
 	}
 }
