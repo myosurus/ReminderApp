@@ -7,6 +7,21 @@ public class AddViewModel : BaseReminderViewModel
 {
 	public ICommand SaveCommand { get; }
 	public ICommand CancelCommand { get; }
+
+	private DateTime _startRemindingDate = DateTime.Now.Date;
+	public DateTime StartRemindingDate
+	{
+		get => _startRemindingDate;
+		set => SetProperty(ref _startRemindingDate, value);
+	}
+
+	private TimeSpan _startRemindingTime = DateTime.Now.TimeOfDay;
+	public TimeSpan StartRemindingTime
+	{
+		get => _startRemindingTime;
+		set => SetProperty(ref _startRemindingTime, value);
+	}
+
 	public AddViewModel()
 	{
 		SaveCommand = new Command(async () => await SaveAsync());
@@ -27,28 +42,27 @@ public class AddViewModel : BaseReminderViewModel
 			Description = Description,
 			ReminderDate = ReminderDate.Date + ReminderTime,
 			Urgency = TextToUrgency(SelectedUrgency),
-			IsDone = false
+			IsDone = false,
+			StartReminding = StartRemindingDate + StartRemindingTime,
+			RemindFrequency = GetFrequencyTimeSpan()
 		};
 
 		await App.Database.CreateReminderAsync(newReminder);
-		await Shell.Current.DisplayAlert("Успех", "Задача добавлена", "OK");
+		NotificationService.ScheduleReminder(newReminder);
 
+		await Shell.Current.DisplayAlert("Успех", "Задача добавлена", "OK");
 		ResetFields();
-		await Shell.Current.GoToAsync(".."); 
+		await Shell.Current.GoToAsync("..");
 		await Shell.Current.GoToAsync("//Reminders");
 	}
 
 	private async Task CancelAsync()
 	{
-		bool confirm = await Shell.Current.DisplayAlert(
-			"Подтверждение",
-			"Отменить создание задачи?",
-			"Да", "Нет");
-
+		bool confirm = await Shell.Current.DisplayAlert("Подтверждение", "Отменить создание задачи?", "Да", "Нет");
 		if(confirm)
 		{
 			ResetFields();
-			await Shell.Current.GoToAsync(".."); 
+			await Shell.Current.GoToAsync("..");
 			await Shell.Current.GoToAsync("//Reminders");
 		}
 	}
@@ -60,8 +74,12 @@ public class AddViewModel : BaseReminderViewModel
 		ReminderDate = DateTime.Now;
 		ReminderTime = DateTime.Now.TimeOfDay;
 		SelectedUrgency = "Средний";
+		StartRemindingDate = DateTime.Now.Date;
+		StartRemindingTime = DateTime.Now.TimeOfDay;
+		FrequencyValue = 30;
+		FrequencyUnit = "мин";
 	}
-
 }
+
 
 

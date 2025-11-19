@@ -33,4 +33,32 @@ public abstract class BaseReminderViewModel : BaseViewModel
 		Urgency.High => "Высокий",
 		_ => "Средний"
 	};
+
+	private int _frequencyValue = 30;
+	public int FrequencyValue
+	{
+		get => _frequencyValue;
+		set => SetProperty(ref _frequencyValue, value);
+	}
+
+	private string _frequencyUnit = "мин";
+	public string FrequencyUnit
+	{
+		get => _frequencyUnit;
+		set => SetProperty(ref _frequencyUnit, value);
+	}
+
+	public List<string> FrequencyUnits { get; } = new() { "мин", "ч", "дн" };
+
+	public TimeSpan GetFrequencyTimeSpan()
+	{
+		return FrequencyUnit switch
+		{
+			"мин" => TimeSpan.FromMinutes(FrequencyValue),
+			"ч" => TimeSpan.FromHours(FrequencyValue),
+			"дн" => TimeSpan.FromDays(FrequencyValue),
+			_ => TimeSpan.FromMinutes(30)
+		};
+	}
 }
+
