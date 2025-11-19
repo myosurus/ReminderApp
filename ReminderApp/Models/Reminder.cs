@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace ReminderApp; 
+namespace ReminderApp.Models; 
  
 public class Reminder 
 { 

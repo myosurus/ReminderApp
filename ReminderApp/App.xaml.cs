@@ -1,4 +1,7 @@
-﻿namespace ReminderApp;
+﻿using ReminderApp.Models;
+using ReminderApp.Views;
+
+namespace ReminderApp;
 
 public partial class App : Application
 {
@@ -21,6 +24,7 @@ public partial class App : Application
 	{
 		InitializeComponent();
 		MainPage = new AppShell();
+		Routing.RegisterRoute(nameof(DetailView), typeof(DetailView));
 	}
 }
 

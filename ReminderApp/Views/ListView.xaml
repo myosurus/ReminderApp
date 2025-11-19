@@ -1,64 +1,68 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:xct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="ReminderApp.ReminderListPage"
+    xmlns:vm="clr-namespace:ReminderApp.ViewModels"
+    x:Class="ReminderApp.Views.ListView"
     Title="Задачи"
     BackgroundColor="#F7EAFB">
 
-    <Grid Padding="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+	<ContentPage.BindingContext>
+		<vm:ListViewModel />
+	</ContentPage.BindingContext>
 
-        <!-- Верхнее уведомление -->
-        <VerticalStackLayout Grid.Row="0" Spacing="2">
-            <Label Text="🔔 Напоминания о задачах"
+	<Grid Padding="20">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<VerticalStackLayout Grid.Row="0" Spacing="2">
+			<Label Text="🔔 Напоминания о задачах"
                    FontAttributes="Bold"
                    FontSize="14"
                    TextColor="#333"/>
-            <Label Text="Не упускайте важные задачи"
+			<Label Text="Не упускайте важные задачи"
                    FontSize="12"
                    TextColor="#777"/>
-        </VerticalStackLayout>
+		</VerticalStackLayout>
 
-        <!-- Основной контент - список задач -->
-        <CollectionView Grid.Row="1"
+		<CollectionView Grid.Row="1"
                         x:Name="RemindersCollectionView"
+                        ItemsSource="{Binding Reminders}"
                         SelectionMode="Single"
-                        SelectionChanged="OnReminderSelected">
-            <CollectionView.EmptyView>
-                <!-- Состояние когда задач нет -->
-                <VerticalStackLayout 
+                        SelectedItem="{Binding SelectedReminder, Mode=TwoWay}">
+
+			<CollectionView.EmptyView>
+				<VerticalStackLayout 
                     VerticalOptions="CenterAndExpand"
                     HorizontalOptions="CenterAndExpand"
                     Spacing="10">
-                    <Image Source="clock_icon.png"
+					<Image Source="clock_icon.png"
                            HeightRequest="50"
                            WidthRequest="50"
                            Aspect="AspectFit"/>
-                    <Label Text="Задачи не найдены"
+					<Label Text="Задачи не найдены"
                            FontAttributes="Bold"
                            FontSize="14"
                            TextColor="#777"
                            HorizontalTextAlignment="Center"/>
-                    <Label Text="Добавьте первую задачу"
+					<Label Text="Добавьте первую задачу"
                            FontSize="12"
                            TextColor="#999"
                            HorizontalTextAlignment="Center"/>
-                </VerticalStackLayout>
-            </CollectionView.EmptyView>
+				</VerticalStackLayout>
+			</CollectionView.EmptyView>
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Padding="15,10" 
+			<CollectionView.ItemTemplate>
+				<DataTemplate>
+					<Grid Padding="15,10" 
                           ColumnDefinitions="Auto,*,Auto,Auto"
                           BackgroundColor="#FDFCFD"
                           Margin="0,1">
 
-                        <!-- Индикатор срочности -->
-                        <Frame Grid.Column="0"
+						<Frame Grid.Column="0"
                                BackgroundColor="{Binding UrgencyColor}"
                                HeightRequest="12"
                                WidthRequest="12"
@@ -67,31 +71,34 @@
                                CornerRadius="6"
                                VerticalOptions="Center"/>
 
-                        <!-- Название и описание -->
-                        <VerticalStackLayout Grid.Column="1" Spacing="2" Margin="10,0">
-                            <Label Text="{Binding Name}"
+						<VerticalStackLayout Grid.Column="1" Spacing="2" Margin="10,0">
+							<Label Text="{Binding Name}"
                                    FontSize="14"
                                    FontAttributes="Bold"
                                    TextColor="#333"/>
-                            <Label Text="{Binding Description}"
+							<Label Text="{Binding Description}"
                                    FontSize="12"
                                    TextColor="#666"
                                    LineBreakMode="TailTruncation"
                                    MaxLines="1"/>
-                            <Label Text="{Binding ReminderDate, StringFormat='{0:dd.MM.yyyy HH:mm}'}"
+							<Label Text="{Binding ReminderDate, StringFormat='{0:dd.MM.yyyy HH:mm}'}"
                                    FontSize="11"
                                    TextColor="#999"/>
-                        </VerticalStackLayout>
+						</VerticalStackLayout>
 
-                        <!-- Статус выполнения -->
-                        <CheckBox Grid.Column="2"
+						<CheckBox Grid.Column="2"
                                   IsChecked="{Binding IsDone}"
                                   VerticalOptions="Center"
-                                  Margin="10,0"
-                                  CheckedChanged="OnCheckBoxCheckedChanged"/>
+                                  Margin="10,0">
+							<CheckBox.Behaviors>
+								<xct:EventToCommandBehavior
+                                    EventName="CheckedChanged"
+                                    Command="{Binding Source={x:Reference RemindersCollectionView}, Path=BindingContext.CheckBoxCheckedCommand}"
+                                    CommandParameter="{Binding .}" />
+							</CheckBox.Behaviors>
+						</CheckBox>
 
-                        <!-- Индикатор просроченности -->
-                        <Frame Grid.Column="3"
+						<Frame Grid.Column="3"
                                BackgroundColor="{Binding OverdueColor}"
                                HeightRequest="8"
                                WidthRequest="8"
@@ -100,10 +107,10 @@
                                CornerRadius="4"
                                VerticalOptions="Center"
                                IsVisible="{Binding IsOverdue}"/>
-                    </Grid>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </Grid>
-</ContentPage>
+					</Grid>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
 
+	</Grid>
+</ContentPage>
