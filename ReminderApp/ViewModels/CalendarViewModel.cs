@@ -194,6 +194,6 @@ public class CalendarViewModel : BaseViewModel
 		}
 
 		await Shell.Current.GoToAsync(
-			$"{nameof(AddView)}?date={_selectedDate.Value:yyyy-MM-dd}");
+			$"{nameof(AddView)}?date={_selectedDate.Value:yyyy-MM-dd}", true);
 	}
 }

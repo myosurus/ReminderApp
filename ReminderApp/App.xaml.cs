@@ -23,7 +23,8 @@ public partial class App : Application
 	public App()
 	{
 		InitializeComponent();
-		MainPage = new AppShell();
+		MainPage = new AppShell(); 
+		Routing.RegisterRoute(nameof(AddView), typeof(AddView));
 		Routing.RegisterRoute(nameof(EditView), typeof(EditView));
 	}
 }

@@ -7,7 +7,6 @@ public class AddViewModel : BaseReminderViewModel
 {
 	public ICommand SaveCommand { get; }
 	public ICommand CancelCommand { get; }
-
 	public AddViewModel()
 	{
 		SaveCommand = new Command(async () => await SaveAsync());
@@ -34,6 +33,8 @@ public class AddViewModel : BaseReminderViewModel
 		await App.Database.CreateReminderAsync(newReminder);
 		await Shell.Current.DisplayAlert("Успех", "Задача добавлена", "OK");
 
+		ResetFields();
+		await Shell.Current.GoToAsync(".."); 
 		await Shell.Current.GoToAsync("//Reminders");
 	}
 
@@ -45,8 +46,22 @@ public class AddViewModel : BaseReminderViewModel
 			"Да", "Нет");
 
 		if(confirm)
+		{
+			ResetFields();
+			await Shell.Current.GoToAsync(".."); 
 			await Shell.Current.GoToAsync("//Reminders");
+		}
 	}
+
+	private void ResetFields()
+	{
+		Name = string.Empty;
+		Description = string.Empty;
+		ReminderDate = DateTime.Now;
+		ReminderTime = DateTime.Now.TimeOfDay;
+		SelectedUrgency = "Средний";
+	}
+
 }
 
 
