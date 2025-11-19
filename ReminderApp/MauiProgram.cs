@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification;
 
 namespace ReminderApp
 {
@@ -10,6 +11,7 @@ namespace ReminderApp
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+				.UseLocalNotification()
 				.UseMauiCommunityToolkit()
 				.ConfigureFonts(fonts =>
                 {
