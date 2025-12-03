@@ -37,67 +37,63 @@
 			</VerticalStackLayout>
 
 			<!-- Срочность и дата -->
-			<Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-				<VerticalStackLayout Grid.Column="0" Spacing="5">
-					<Label Text="Уровень срочности"
-                           FontSize="12"
-                           TextColor="#666666"/>
-					<Picker ItemsSource="{Binding UrgencyOptions}"
-                            SelectedItem="{Binding SelectedUrgency}"
-                            BackgroundColor="White"
-                            TextColor="#333333"/>
-				</VerticalStackLayout>
-
-				<VerticalStackLayout Grid.Column="1" Spacing="5">
-					<Label Text="Срок выполнения"
-                           FontSize="12"
-                           TextColor="#666666"/>
-					<DatePicker Date="{Binding ReminderDate}"
-                                Format="dd.MM.yyyy"
-                                BackgroundColor="White"
-                                TextColor="#333333"/>
-					<TimePicker Time="{Binding ReminderTime}"
-                                BackgroundColor="White"
-                                TextColor="#333333"/>
-				</VerticalStackLayout>
-			</Grid>
-
-			<VerticalStackLayout Spacing="5">
-				<Label Text="Начать напоминания"
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                    <Label Text="Срок выполнения"
                        FontSize="12"
-                       TextColor="#666666" />
+                       TextColor="#666666"/>
+                    <DatePicker Date="{Binding ReminderDate}"
+                        Format="dd.MM.yyyy"
+                        BackgroundColor="White"
+                        TextColor="#333333"/>
+                </VerticalStackLayout>
 
-				<DatePicker Date="{Binding StartRemindingDate}"
+                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                    <Label Text=""
+                        FontSize="12"
+                        TextColor="#666666"/>
+                    <TimePicker Time="{Binding ReminderTime}"
+                                BackgroundColor="White"
+                                TextColor="#333333"/>
+                </VerticalStackLayout>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <VerticalStackLayout Grid.Column="0" Spacing="5">
+                    <Label Text="Начало напоминания"
+                           FontSize="12"
+                           TextColor="#666666" />
+                    <DatePicker Date="{Binding StartRemindingDate}"
                             Format="dd.MM.yyyy"
                             BackgroundColor="White"
                             TextColor="#333333"/>
+                    <TimePicker 
+                        Time="{Binding StartRemindingTime}"
+                        BackgroundColor="White"
+                        TextColor="#333333"/>
+                </VerticalStackLayout>
 
-				<TimePicker Time="{Binding StartRemindingTime}"
-                            BackgroundColor="White"
-                            TextColor="#333333"/>
-			</VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1" Spacing="5">
+                    <Label Text="Частота напоминаний"
+                           FontSize="12"
+                           TextColor="#666666" />
+                    <HorizontalStackLayout Spacing="10">
+                        <Entry Text="{Binding FrequencyValue}" 
+                               Keyboard="Numeric"
+                               WidthRequest="80"
+                               BackgroundColor="White"
+                               TextColor="#333333"/>
+                        <Picker ItemsSource="{Binding FrequencyUnits}" 
+                                SelectedItem="{Binding FrequencyUnit}" 
+                                WidthRequest="100"
+                                BackgroundColor="White"
+                                TextColor="#333333"/>
+                    </HorizontalStackLayout>
 
-			<VerticalStackLayout Spacing="5">
-				<Label Text="Частота напоминаний"
-                       FontSize="12"
-                       TextColor="#666666" />
+                </VerticalStackLayout>
+            </Grid>
 
-				<HorizontalStackLayout Spacing="10">
-					<Entry Text="{Binding FrequencyValue}" 
-                           Keyboard="Numeric"
-                           WidthRequest="80"
-                           BackgroundColor="White"
-                           TextColor="#333333"/>
-
-					<Picker ItemsSource="{Binding FrequencyUnits}" 
-                            SelectedItem="{Binding FrequencyUnit}" 
-                            WidthRequest="100"
-                            BackgroundColor="White"
-                            TextColor="#333333"/>
-				</HorizontalStackLayout>
-			</VerticalStackLayout>
-
-			<!-- Кнопки -->
+            <!-- Кнопки -->
 			<Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,10,0,0">
 				<Button Grid.Column="0"
                         Text="Отмена"

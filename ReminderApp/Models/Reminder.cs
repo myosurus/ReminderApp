@@ -12,5 +12,8 @@ public class Reminder
 	public DateTime ReminderDate { get; set; } 
 	public DateTime StartReminding { get; set; } 
 	public TimeSpan RemindFrequency { get; set; } 
-	public bool IsDone { get; set; } 
-} 
+	public bool IsDone { get; set; }
+
+    public TimeSpan ReminderTime { get; set; } //добавлено
+
+}

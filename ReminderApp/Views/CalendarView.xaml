@@ -57,7 +57,7 @@
                         HeightRequest="40"/>
 			</Grid>
 
-			<!-- Сетка календаря -->
+            <!-- Сетка календаря -->
 			<Border Stroke="#E0E0E0"
                     StrokeThickness="1"
                     BackgroundColor="White"
@@ -75,20 +75,36 @@
                                    CornerRadius="8"
                                    HasShadow="False"
                                    BackgroundColor="{Binding IsSelected, Converter={StaticResource BoolToColorConverter}}">
-								<VerticalStackLayout HorizontalOptions="Center"
+								<VerticalStackLayout HorizontalOptions="Center" 
                                                      VerticalOptions="Center">
 									<Label Text="{Binding Date.Day}"
                                            FontSize="14"
                                            TextColor="{Binding IsCurrentMonth, Converter={StaticResource MonthTextColorConverter}}"
                                            HorizontalOptions="Center"/>
 
-									<BoxView HeightRequest="4"
+									<!--<BoxView HeightRequest="4"
                                              WidthRequest="4"
                                              CornerRadius="2"
-                                             BackgroundColor="#007AFF"
+                                             BackgroundColor="#5877c7"
                                              IsVisible="{Binding HasReminders}"
-                                             HorizontalOptions="Center"/>
-								</VerticalStackLayout>
+                                             HorizontalOptions="Center"/>-->
+                                    <HorizontalStackLayout Spacing="2" HorizontalOptions="Center">
+                                        <!-- Невыполненные (синие) -->
+                                        <BoxView HeightRequest="6"
+                                             WidthRequest="6"
+                                             CornerRadius="3"
+                                             BackgroundColor="#5877c7"
+                                             IsVisible="{Binding HasUndone}" />
+
+                                        <!-- Выполненные (серые) -->
+                                        <BoxView HeightRequest="6"
+                                             WidthRequest="6"
+                                             CornerRadius="3"
+                                             BackgroundColor="#BDBDBD"
+                                             IsVisible="{Binding HasDone}" />
+                                    </HorizontalStackLayout>
+
+                                </VerticalStackLayout>
 
 								<Frame.GestureRecognizers>
 									<TapGestureRecognizer
@@ -126,7 +142,8 @@
 					</CollectionView.ItemTemplate>
 				</CollectionView>
 
-				<Button Text="Добавить задачу на этот день"
+
+                <Button Text="Добавить задачу на этот день"
                         BackgroundColor="#007AFF"
                         TextColor="White"
                         CornerRadius="5"
@@ -146,7 +163,7 @@
 
 				<Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*" RowSpacing="8">
 					<Frame Grid.Row="0" Grid.Column="0"
-                           BackgroundColor="#4CAF50"
+                           BackgroundColor="#5877c7"
                            HeightRequest="16"
                            WidthRequest="16"
                            Padding="0"

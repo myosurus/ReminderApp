@@ -61,7 +61,7 @@ public class CalendarViewModel : BaseViewModel
 	public ICommand SelectDateCommand { get; }
 	public ICommand AddTaskCommand { get; }
 
-	public CalendarViewModel()
+    public CalendarViewModel()
 	{
 		_currentMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
@@ -70,10 +70,12 @@ public class CalendarViewModel : BaseViewModel
 		SelectDateCommand = new Command<CalendarDay>(OnDaySelected);
 		AddTaskCommand = new Command(async () => await AddTaskForSelectedDate());
 
-		_ = InitializeAsync();
-	}
+        _ = InitializeAsync();
+    }
 
-	private async Task InitializeAsync()
+    
+
+    private async Task InitializeAsync()
 	{
 		await LoadReminders();
 		UpdateCalendar();
@@ -103,23 +105,39 @@ public class CalendarViewModel : BaseViewModel
 		int firstDayOfWeek = ((int)firstOfMonth.DayOfWeek + 6) % 7; // Monday=0
 		DateTime startDate = firstOfMonth.AddDays(-firstDayOfWeek);
 
-		for(int i = 0; i < 42; i++)
+		for (int i = 0; i < 42; i++)
 		{
 			DateTime date = startDate.AddDays(i);
-			bool hasReminders = AllReminders.Any(r => r.ReminderDate.Date == date.Date);
+            //bool hasReminders = AllReminders.Any(r => r.ReminderDate.Date == date.Date);
 
-			CalendarDays.Add(new CalendarDay
-			{
-				Date = date,
-				IsCurrentMonth = date.Month == _currentMonth.Month,
-				IsToday = date.Date == DateTime.Today,
-				HasReminders = hasReminders,
-				IsSelected = _selectedDate.HasValue && _selectedDate.Value.Date == date.Date
-			});
-		}
-	}
+            //CalendarDays.Add(new CalendarDay
+            //{
+            //	Date = date,
+            //	IsCurrentMonth = date.Month == _currentMonth.Month,
+            //	IsToday = date.Date == DateTime.Today,
+            //	HasReminders = hasReminders,
+            //	IsSelected = _selectedDate.HasValue && _selectedDate.Value.Date == date.Date
+            //});
 
-	private async Task ChangeMonth(int delta)
+            var remindersForDate = AllReminders.Where(r => r.ReminderDate.Date == date.Date);  //добавлено
+
+            bool hasUndone = remindersForDate.Any(r => !r.IsDone);  //добавлено
+            bool hasDone = remindersForDate.Any(r => r.IsDone);  //добавлено
+
+            CalendarDays.Add(new CalendarDay  //добавлено
+            {
+                Date = date,
+                IsCurrentMonth = date.Month == _currentMonth.Month,
+                IsToday = date.Date == DateTime.Today,
+                HasUndone = hasUndone,
+                HasDone = hasDone,
+                IsSelected = _selectedDate.HasValue && _selectedDate.Value.Date == date.Date
+            });
+
+        }
+    }
+
+    private async Task ChangeMonth(int delta)
 	{
 		CurrentMonth = _currentMonth.AddMonths(delta);
 		SelectedDate = null;
@@ -161,8 +179,8 @@ public class CalendarViewModel : BaseViewModel
 			{
 				Name = reminder.Name,
 				Time = reminder.ReminderDate.ToString("HH:mm"),
-				Color = GetTaskColor(reminder)
-			});
+                Color = Color.FromArgb("#5877c7")
+            });
 		}
 
 		IsTasksSectionVisible = true;
@@ -180,9 +198,9 @@ public class CalendarViewModel : BaseViewModel
 			Urgency.Low => Color.FromArgb("#4CAF50"),
 			_ => Color.FromArgb("#2196F3")
 		};
-	}
+    } //2285ff
 
-	private async Task AddTaskForSelectedDate()
+    private async Task AddTaskForSelectedDate()
 	{
 		if(!_selectedDate.HasValue)
 		{

@@ -5,10 +5,28 @@ public class CalendarDay : BaseViewModel
 	private DateTime _date;
 	private bool _isCurrentMonth;
 	private bool _isToday;
-	private bool _hasReminders;
+	//private bool _hasReminders;
 	private bool _isSelected;
 
-	public DateTime Date
+
+    private bool _hasUndone; //добавлено
+    private bool _hasDone; //добавлено
+
+    public bool HasUndone //добавлено
+    {
+        get => _hasUndone;
+        set => SetProperty(ref _hasUndone, value); 
+    }
+
+    public bool HasDone  //добавлено
+    {
+        get => _hasDone;
+        set => SetProperty(ref _hasDone, value);
+    }
+
+
+
+    public DateTime Date
 	{
 		get => _date;
 		set => SetProperty(ref _date, value);
@@ -26,11 +44,11 @@ public class CalendarDay : BaseViewModel
 		set => SetProperty(ref _isToday, value);
 	}
 
-	public bool HasReminders
-	{
-		get => _hasReminders;
-		set => SetProperty(ref _hasReminders, value);
-	}
+	//public bool HasReminders
+	//{
+	//	get => _hasReminders;
+	//	set => SetProperty(ref _hasReminders, value);
+	//}
 
 	public bool IsSelected
 	{

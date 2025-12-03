@@ -1,4 +1,5 @@
-﻿using ReminderApp.Models;
+﻿using CommunityToolkit.Maui.Alerts;
+using ReminderApp.Models;
 using ReminderApp.Views;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -14,12 +15,16 @@ public class ListViewModel : BaseViewModel
 	public ICommand CheckBoxCheckedCommand { get; }
 
 	private ReminderItem _selectedReminder;
+
+
+
+
 	public ReminderItem SelectedReminder
 	{
 		get => _selectedReminder;
 		set
 		{
-			if(SetProperty(ref _selectedReminder, value) && value != null)
+			if (SetProperty(ref _selectedReminder, value) && value != null)
 			{
 				ItemTappedCommand.Execute(value);
 				MainThread.BeginInvokeOnMainThread(() => SelectedReminder = null);
@@ -30,10 +35,10 @@ public class ListViewModel : BaseViewModel
 	public ListViewModel()
 	{
 		LoadRemindersCommand = new Command(async () => await LoadReminders());
-		ItemTappedCommand = new Command<ReminderItem>(async (reminderItem) => await OnReminderTapped(reminderItem)); 
+		ItemTappedCommand = new Command<ReminderItem>(async (reminderItem) => await OnReminderTapped(reminderItem));
 		CheckBoxCheckedCommand = new Command<ReminderItem>(async (reminderItem) =>
 		{
-			if(reminderItem == null)
+			if (reminderItem == null)
 				return;
 
 			await OnCheckChanged(reminderItem);
@@ -43,7 +48,7 @@ public class ListViewModel : BaseViewModel
 
 	private async Task LoadReminders()
 	{
-		if(IsBusy)
+		if (IsBusy)
 			return;
 
 		IsBusy = true;
@@ -56,11 +61,11 @@ public class ListViewModel : BaseViewModel
 			await MainThread.InvokeOnMainThreadAsync(() =>
 			{
 				Reminders.Clear();
-				foreach(var reminder in activeReminders)
+				foreach (var reminder in activeReminders)
 					Reminders.Add(new ReminderItem(reminder));
 			});
 		}
-		catch(Exception ex)
+		catch (Exception ex)
 		{
 			Debug.WriteLine($"Error loading reminders: {ex}");
 		}
@@ -73,21 +78,23 @@ public class ListViewModel : BaseViewModel
 
 	private async Task OnCheckChanged(ReminderItem reminderItem)
 	{
-		if(reminderItem == null)
+		if (reminderItem == null)
 			return;
 
 		await App.Database.SaveReminderAsync(reminderItem.Reminder);
 
 		MainThread.BeginInvokeOnMainThread(() =>
 		{
-			if(reminderItem.Reminder.IsDone)
+			if (reminderItem.Reminder.IsDone)
 				Reminders.Remove(reminderItem);
 		});
 	}
 
+
+
 	private async Task OnReminderTapped(ReminderItem reminderItem)
 	{
-		if(reminderItem == null)
+		if (reminderItem == null)
 			return;
 
 		await Shell.Current.GoToAsync($"{nameof(EditView)}?id={reminderItem.Reminder.Id}");

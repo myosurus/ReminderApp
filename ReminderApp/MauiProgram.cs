@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Core;
 using Microsoft.Extensions.Logging;
 using Plugin.LocalNotification;
 
@@ -13,7 +14,7 @@ namespace ReminderApp
                 .UseMauiApp<App>()
 				.UseLocalNotification()
 				.UseMauiCommunityToolkit()
-				.ConfigureFonts(fonts =>
+                .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");

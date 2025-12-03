@@ -41,11 +41,11 @@ public class AddViewModel : BaseReminderViewModel
 			Name = Name,
 			Description = Description,
 			ReminderDate = ReminderDate.Date + ReminderTime,
-			Urgency = TextToUrgency(SelectedUrgency),
+			//Urgency = TextToUrgency(SelectedUrgency),
 			IsDone = false,
 			StartReminding = StartRemindingDate + StartRemindingTime,
 			RemindFrequency = GetFrequencyTimeSpan()
-		};
+        };
 
 		await App.Database.CreateReminderAsync(newReminder);
 		NotificationService.ScheduleReminder(newReminder);
@@ -73,7 +73,6 @@ public class AddViewModel : BaseReminderViewModel
 		Description = string.Empty;
 		ReminderDate = DateTime.Now;
 		ReminderTime = DateTime.Now.TimeOfDay;
-		SelectedUrgency = "Средний";
 		StartRemindingDate = DateTime.Now.Date;
 		StartRemindingTime = DateTime.Now.TimeOfDay;
 		FrequencyValue = 30;
