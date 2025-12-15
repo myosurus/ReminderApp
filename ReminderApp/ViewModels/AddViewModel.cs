@@ -46,11 +46,20 @@ public class AddViewModel : BaseReminderViewModel
 			StartReminding = StartRemindingDate + StartRemindingTime,
 			RemindFrequency = GetFrequencyTimeSpan()
         };
+		while(newReminder.StartReminding < DateTime.Now) newReminder.StartReminding += newReminder.RemindFrequency;
 
-		await App.Database.CreateReminderAsync(newReminder);
-		NotificationService.ScheduleReminder(newReminder);
+        await App.Database.CreateReminderAsync(newReminder);
 
-		await Shell.Current.DisplayAlert("Успех", "Задача добавлена", "OK");
+        var notification = new Notification
+        {
+            ReminderId = newReminder.Id
+        };
+
+        await App.Database.CreateNotificationAsync(notification);
+
+        NotificationService.ScheduleReminder(newReminder, notification.Id);
+
+        await Shell.Current.DisplayAlert("Успех", "Задача добавлена", "OK");
 		ResetFields();
 		await Shell.Current.GoToAsync("..");
 		await Shell.Current.GoToAsync("//Reminders");
