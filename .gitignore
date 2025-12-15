@@ -66,3 +66,4 @@ secrets.json
 # Logs
 *.log
 /ReminderApp/ReminderApp.csproj.user
+/Visual Studio 18/Visualizers/attribcache140.bin

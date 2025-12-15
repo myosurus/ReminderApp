@@ -42,10 +42,10 @@
 	
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\reminder.svg" />
+		<MauiIcon Include="Resources\AppIcon\reminder.svg" BaseSize="150,150" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" TintColor="#FFFFFF" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" BaseSize="150,150" Color="purple" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />

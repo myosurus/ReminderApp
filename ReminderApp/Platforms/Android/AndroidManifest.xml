@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:allowBackup="true" android:supportsRtl="true">
+	<application android:allowBackup="true" android:supportsRtl="true" android:icon="@mipmap/reminder">
 		<receiver android:name="plugin.localnotification.NotificationBootReceiver" android:exported="true">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
