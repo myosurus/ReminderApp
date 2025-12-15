@@ -79,6 +79,3 @@ public class AddViewModel : BaseReminderViewModel
 		FrequencyUnit = "мин";
 	}
 }
-
-
-

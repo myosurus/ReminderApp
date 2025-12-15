@@ -134,7 +134,15 @@
                                    CornerRadius="8"
                                    HasShadow="False"
                                    BackgroundColor="{Binding Color}">
-								<Label Text="{Binding Name}"
+
+                                <Frame.GestureRecognizers> <!--добавлено-->
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:CalendarViewModel}},
+                                                          Path=OpenTaskCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+
+                                <Label Text="{Binding Name}"
                                        FontSize="14"
                                        TextColor="White"/>
 							</Frame>

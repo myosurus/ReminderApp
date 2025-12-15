@@ -27,6 +27,7 @@
 			<VerticalStackLayout Spacing="5">
 				<Label Text="Описание задачи"
                        FontSize="14"
+                       FontAttributes="Bold"
                        TextColor="#333333"/>
                 <Editor Placeholder="Добавьте описание задачи..."
                        Text="{Binding Description}"
@@ -42,8 +43,9 @@
                 <VerticalStackLayout Grid.Column="0" Spacing="5">
                     <Label Text="Срок выполнения"
                            FontSize="12"
-                           TextColor="#666666"
-                           Margin="0,25,0,0"/>
+                           FontAttributes="Bold"
+                           TextColor="#333333"
+                           Margin="0,0,0,0"/>
                     <DatePicker Date="{Binding ReminderDate}"
                             Format="dd.MM.yyyy"
                             BackgroundColor="White"
@@ -54,7 +56,10 @@
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Grid.Column="1" Spacing="5">
-                    <Label Text="Начало напоминания" FontSize="12" TextColor="#666666"/>
+                    <Label Text="Начало напоминания" 
+                           FontSize="12"
+                           FontAttributes="Bold" 
+                           TextColor="#333333"/>
                     <DatePicker 
                             Date="{Binding StartRemindingDate}" 
                             Format="dd.MM.yyyy" 
@@ -72,7 +77,8 @@
                         <Label 
                                 Text="Частота напоминаний" 
                                 FontSize="12" 
-                                TextColor="#666666"
+                                FontAttributes="Bold"
+                                TextColor="#333333"
                                 Margin="0,15,0,0"/>
                         <HorizontalStackLayout Spacing="10">
                             <Entry 
@@ -80,18 +86,20 @@
                                     Keyboard="Numeric" 
                                     WidthRequest="80" 
                                     BackgroundColor="White" 
-                                    TextColor="#333333"/>
+                                    TextColor="#333333"
+                                    Margin="0,0,0,0"/>
                             <Picker 
                                 ItemsSource="{Binding FrequencyUnits}" 
                                 SelectedItem="{Binding FrequencyUnit}" 
-                                WidthRequest="100" BackgroundColor="White" 
-                                TextColor="#333333"/>
+                                WidthRequest="80" BackgroundColor="White" 
+                                TextColor="#333333"
+                                Margin="0,0,0,0"/>
                         </HorizontalStackLayout>
 
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Grid.Column="1" Spacing="5">
-                    <VerticalStackLayout Spacing="5" HorizontalOptions="Center" Margin="0,35,0,0">
+                    <VerticalStackLayout Spacing="5" HorizontalOptions="Center" Margin="0,25,0,0">
 
                         <Frame BackgroundColor="{Binding UrgencyColor}"
                                CornerRadius="25"
@@ -106,6 +114,7 @@
 
                         <Label Text="{Binding DueStatusText}"
                                FontSize="11"
+                               FontAttributes="Bold"
                                TextColor="#555"
                                HorizontalTextAlignment="Center"
                                Margin="8,4,0,0"/>
@@ -118,11 +127,15 @@
 				<Button Grid.Column="0"
                         Text="Отмена"
                         BackgroundColor="#F5F5F5"
+                        FontSize="16"
+                        FontAttributes="Bold"
                         TextColor="#666666"
                         Command="{Binding CancelCommand}" />
 				<Button Grid.Column="1"
-                        Text="Сохранить изменения"
+                        Text="Сохранить"
                         BackgroundColor="#007AFF"
+                        FontSize="16"
+                        FontAttributes="Bold"
                         TextColor="White"
                         Command="{Binding SaveCommand}" />
 			</Grid>

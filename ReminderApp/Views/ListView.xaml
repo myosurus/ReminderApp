@@ -6,7 +6,8 @@
     xmlns:vm="clr-namespace:ReminderApp.ViewModels"
     x:Class="ReminderApp.Views.ListView"
     Title="Задачи"
-    BackgroundColor="#F7EAFB">
+    BackgroundColor="#F7EAFB"
+    x:Name="ReminderList">
 
 	<ContentPage.BindingContext>
 		<vm:ListViewModel />
@@ -93,8 +94,7 @@
                             <CheckBox.Behaviors>
                                 <xct:EventToCommandBehavior
                                     EventName="CheckedChanged"
-                                    Command="{Binding Source={x:Reference RemindersCollectionView}, Path=BindingContext.CheckBoxCheckedCommand}"
-                                    CommandParameter="{Binding .}" />
+                                    Command="{Binding CheckBoxCheckedCommand}" />
                             </CheckBox.Behaviors>
                         </CheckBox>
                     </Grid>

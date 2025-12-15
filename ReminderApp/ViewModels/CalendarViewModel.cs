@@ -61,6 +61,9 @@ public class CalendarViewModel : BaseViewModel
 	public ICommand SelectDateCommand { get; }
 	public ICommand AddTaskCommand { get; }
 
+    public ICommand OpenTaskCommand { get; } //добавлено
+
+
     public CalendarViewModel()
 	{
 		_currentMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -69,6 +72,17 @@ public class CalendarViewModel : BaseViewModel
 		PrevMonthCommand = new Command(async () => await ChangeMonth(-1));
 		SelectDateCommand = new Command<CalendarDay>(OnDaySelected);
 		AddTaskCommand = new Command(async () => await AddTaskForSelectedDate());
+
+
+        OpenTaskCommand = new Command<TaskItem>(async task => //добавлено
+        {
+            if (task == null) return;
+
+            await Shell.Current.GoToAsync(
+                $"{nameof(EditView)}?id={task.Id}");
+        });
+
+
 
         _ = InitializeAsync();
     }
@@ -177,7 +191,8 @@ public class CalendarViewModel : BaseViewModel
 		{
 			DayTasks.Add(new TaskItem
 			{
-				Name = reminder.Name,
+                Id = reminder.Id, //добавлено
+                Name = reminder.Name,
 				Time = reminder.ReminderDate.ToString("HH:mm"),
                 Color = Color.FromArgb("#5877c7")
             });
