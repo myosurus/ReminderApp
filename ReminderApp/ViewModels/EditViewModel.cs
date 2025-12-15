@@ -71,14 +71,23 @@ public class EditViewModel : BaseReminderViewModel
 		_reminder.Description = Description;
 		_reminder.ReminderDate = ReminderDate.Date + ReminderTime;
 		_reminder.StartReminding = StartRemindingDate + StartRemindingTime;
-		_reminder.RemindFrequency = GetFrequencyTimeSpan();
+        _reminder.RemindFrequency = GetFrequencyTimeSpan();
+        while(_reminder.StartReminding < DateTime.Now) _reminder.StartReminding += _reminder.RemindFrequency;
 
-		await App.Database.SaveReminderAsync(_reminder);
+        await App.Database.SaveReminderAsync(_reminder);
 
-		NotificationService.CancelReminder(_reminder.Id);
-		NotificationService.ScheduleReminder(_reminder);
+        var notifications = await App.Database.GetNotificationsByReminderIdAsync(_reminder.Id);
 
-		await Shell.Current.DisplayAlert("Успех", "Изменения сохранены", "OK");
+        foreach (var n in notifications)
+        {
+            NotificationService.CancelNotification(n.Id);
+
+            await App.Database.SaveNotificationAsync(n);
+
+            NotificationService.ScheduleReminder(_reminder, n.Id);
+        }
+
+        await Shell.Current.DisplayAlert("Успех", "Изменения сохранены", "OK");
 		await Shell.Current.GoToAsync("//Reminders");
 	}
 
@@ -87,8 +96,16 @@ public class EditViewModel : BaseReminderViewModel
 		bool confirm = await Shell.Current.DisplayAlert("Удалить", "Удалить эту задачу?", "Да", "Нет");
 		if (!confirm) return;
 
-		NotificationService.CancelReminder(_reminder.Id);
-		await App.Database.DeleteReminderAsync(_reminder);
+        var notifications = await App.Database.GetNotificationsByReminderIdAsync(_reminder.Id);
+
+        foreach (var n in notifications)
+        {
+            NotificationService.CancelNotification(n.Id);
+            await App.Database.DeleteNotificationAsync(n);
+        }
+
+        await App.Database.DeleteReminderAsync(_reminder);
+
 		await Shell.Current.GoToAsync("//Reminders");
 	}
 

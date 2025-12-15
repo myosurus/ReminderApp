@@ -1,34 +1,34 @@
 ﻿using Plugin.LocalNotification;
+using Plugin.LocalNotification.AndroidOption;
 
 namespace ReminderApp.Models;
 
 public static class NotificationService
 {
-	public static void ScheduleReminder(Reminder reminder)
-	{
-		var request = new NotificationRequest
-		{
-			NotificationId = reminder.Id,
-			Title = reminder.Name,
-			Description = reminder.Description,
-			Schedule =
-			{
-				NotifyTime = reminder.StartReminding,
-				RepeatType = NotificationRepeat.TimeInterval,
-				NotifyRepeatInterval = reminder.RemindFrequency,
-				Android =
-				{
-					AlarmType = Plugin.LocalNotification.AndroidOption.AndroidAlarmType.RtcWakeup
-				}
-			}
-		};
+    public static void ScheduleReminder(Reminder reminder, int notificationId)
+    {
+        var request = new NotificationRequest
+        {
+            NotificationId = notificationId,
+            Title = reminder.Name,
+            Description = reminder.Description,
+            Schedule =
+            {
+                NotifyTime = reminder.StartReminding,
+                RepeatType = NotificationRepeat.TimeInterval,
+                NotifyRepeatInterval = reminder.RemindFrequency,
+                Android =
+                {
+                    AlarmType = AndroidAlarmType.RtcWakeup
+                }
+            }
+        };
 
-		LocalNotificationCenter.Current.Show(request);
-	}
+        LocalNotificationCenter.Current.Show(request);
+    }
 
-	public static void CancelReminder(int id)
-	{
-		LocalNotificationCenter.Current.Cancel(id);
-	}
+    public static void CancelNotification(int notificationId)
+    {
+        LocalNotificationCenter.Current.Cancel(notificationId);
+    }
 }
-

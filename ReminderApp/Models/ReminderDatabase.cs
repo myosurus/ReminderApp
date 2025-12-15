@@ -9,10 +9,11 @@ public class ReminderDatabase
 	public ReminderDatabase(string dbPath)
 	{
 		_database = new SQLiteAsyncConnection(dbPath);
-		_database.CreateTableAsync<Reminder>().Wait();
-	}
+		_database.CreateTableAsync<Reminder>().Wait(); 
+		_database.CreateTableAsync<Notification>().Wait();
+    }
 
-	public Task<List<Reminder>> GetRemindersAsync() =>
+    public Task<List<Reminder>> GetRemindersAsync() =>
 		_database.Table<Reminder>().ToListAsync();
 
 	public Task<Reminder> GetReminderAsync(int id) =>
@@ -33,4 +34,24 @@ public class ReminderDatabase
 
     public Task<int> DeleteReminderAsync(Reminder reminder) =>
 		_database.DeleteAsync(reminder);
+
+    public Task<int> CreateNotificationAsync(Notification notification)
+    {
+        return _database.InsertAsync(notification);
+    }
+    public Task<int> SaveNotificationAsync(Notification notification)
+    {
+        if (notification.Id != 0)
+            return _database.UpdateAsync(notification);
+        else
+            return _database.InsertAsync(notification);
+    }
+
+    public Task<int> DeleteNotificationAsync(Notification notification) =>
+    _database.DeleteAsync(notification);
+
+    public Task<List<Notification>> GetNotificationsByReminderIdAsync(int reminderId) =>
+    _database.Table<Notification>()
+             .Where(n => n.ReminderId == reminderId)
+             .ToListAsync();
 }
