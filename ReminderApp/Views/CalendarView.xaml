@@ -100,7 +100,7 @@
                                         <BoxView HeightRequest="6"
                                              WidthRequest="6"
                                              CornerRadius="3"
-                                             BackgroundColor="#BDBDBD"
+                                             BackgroundColor="#808080"
                                              IsVisible="{Binding HasDone}" />
                                     </HorizontalStackLayout>
 

@@ -26,7 +26,13 @@ public class EditViewModel : BaseReminderViewModel
 		set => SetProperty(ref _startRemindingTime, value);
 	}
 
-	public EditViewModel(Reminder reminder)
+    public string CompletionStatusText //добавлено
+    {
+        get => IsDone ? "Выполнена" : DueStatusText;
+    }
+
+
+    public EditViewModel(Reminder reminder)
 	{
 		_reminder = reminder;
 
@@ -129,7 +135,8 @@ public class EditViewModel : BaseReminderViewModel
 			OnPropertyChanged();
 			OnPropertyChanged(nameof(UrgencyColor));
 			OnPropertyChanged(nameof(Urgency));
-		}
+            OnPropertyChanged(nameof(CompletionStatusText)); //добавлено
+        }
 	}
 
 	private Urgency GetUrgency() //добавлено

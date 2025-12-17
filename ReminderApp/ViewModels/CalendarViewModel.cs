@@ -187,18 +187,30 @@ public class CalendarViewModel : BaseViewModel
 		SelectedDateText = $"Задачи на {_selectedDate:dd MMMM yyyy}";
 
 		DayTasks.Clear();
-		foreach(var reminder in dayReminders)
-		{
-			DayTasks.Add(new TaskItem
-			{
-                Id = reminder.Id, //добавлено
+        //foreach(var reminder in dayReminders)
+        //{
+        //	DayTasks.Add(new TaskItem
+        //	{
+        //              Id = reminder.Id, //добавлено
+        //              Name = reminder.Name,
+        //		Time = reminder.ReminderDate.ToString("HH:mm"),
+        //              Color = Color.FromArgb("#5877c7")
+        //          });
+        //}
+        foreach (var reminder in dayReminders)
+        {
+            DayTasks.Add(new TaskItem
+            {
+                Id = reminder.Id,
                 Name = reminder.Name,
-				Time = reminder.ReminderDate.ToString("HH:mm"),
-                Color = Color.FromArgb("#5877c7")
+                Time = reminder.ReminderDate.ToString("HH:mm"),
+                Color = reminder.IsDone
+                    ? Color.FromArgb("#808080")   // ✅ выполненная
+                    : Color.FromArgb("#5877c7")   // 🔵 невыполненная
             });
-		}
+        }
 
-		IsTasksSectionVisible = true;
+        IsTasksSectionVisible = true;
 	}
 
 	private Color GetTaskColor(Reminder reminder)

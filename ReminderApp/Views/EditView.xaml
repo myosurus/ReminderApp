@@ -112,7 +112,7 @@
                             
                         </Frame>
 
-                        <Label Text="{Binding DueStatusText}"
+                        <Label Text="{Binding CompletionStatusText}"
                                FontSize="11"
                                FontAttributes="Bold"
                                TextColor="#555"

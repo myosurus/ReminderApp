@@ -12,9 +12,11 @@ public class ListViewModel : BaseViewModel
 	public ObservableCollection<ReminderItem> Reminders { get; } = new();
 	public ICommand LoadRemindersCommand { get; }
 	public ICommand ItemTappedCommand { get; }
-	public ICommand CheckBoxCheckedCommand { get; }
+	//public ICommand CheckBoxCheckedCommand { get; }
+    public ICommand CompleteReminderCommand { get; } //добавлено
 
-	private ReminderItem _selectedReminder;
+
+    private ReminderItem _selectedReminder;
 
 
 
@@ -36,17 +38,51 @@ public class ListViewModel : BaseViewModel
 	{
 		LoadRemindersCommand = new Command(async () => await LoadReminders());
 		ItemTappedCommand = new Command<ReminderItem>(async (reminderItem) => await OnReminderTapped(reminderItem));
-		CheckBoxCheckedCommand = new Command<ReminderItem>(async (reminderItem) =>
-		{
-			if (reminderItem == null)
-				return;
+        //CheckBoxCheckedCommand = new Command<ReminderItem>(async (reminderItem) =>
+        //{
+        //	if (reminderItem == null)
+        //		return;
 
-			await OnCheckChanged(reminderItem);
-		});
+        //	await OnCheckChanged(reminderItem);
+        //});
+        CompleteReminderCommand = new Command<ReminderItem>(async (item) =>
+        {
+            if (item == null) return;
 
-	}
+            bool confirm = await Shell.Current.DisplayAlert(
+                "Подтверждение",
+                $"Отметить задачу «{item.Name}» как выполненную?",
+                "Выполнено",
+                "Отмена");
 
-	private async Task LoadReminders()
+            if (!confirm)
+                return;
+
+            await CompleteReminderAsync(item);
+        });
+
+    }
+
+    private async Task CompleteReminderAsync(ReminderItem item)
+    {
+        // 1️⃣ помечаем как выполненную
+        item.Reminder.IsDone = true;
+
+        // 2️⃣ сохраняем в БД (НЕ удаляем!)
+        await App.Database.SaveReminderAsync(item.Reminder);
+
+        // 3️⃣ убираем из списка задач
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Reminders.Remove(item);
+        });
+
+        // 4️⃣ уведомление пользователю
+        await Toast.Make("Задача выполнена").Show();
+    }
+
+
+    private async Task LoadReminders()
 	{
 		if (IsBusy)
 			return;
@@ -76,19 +112,19 @@ public class ListViewModel : BaseViewModel
 	}
 
 
-	private async Task OnCheckChanged(ReminderItem reminderItem)
-	{
-		if (reminderItem == null)
-			return;
+	//private async Task OnCheckChanged(ReminderItem reminderItem)
+	//{
+	//	if (reminderItem == null)
+	//		return;
 
-		await App.Database.SaveReminderAsync(reminderItem.Reminder);
+	//	await App.Database.SaveReminderAsync(reminderItem.Reminder);
 
-		MainThread.BeginInvokeOnMainThread(() =>
-		{
-			if (reminderItem.Reminder.IsDone)
-				Reminders.Remove(reminderItem);
-		});
-	}
+	//	MainThread.BeginInvokeOnMainThread(() =>
+	//	{
+	//		if (reminderItem.Reminder.IsDone)
+	//			Reminders.Remove(reminderItem);
+	//	});
+	//}
 
 
 
