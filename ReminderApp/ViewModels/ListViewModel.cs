@@ -4,6 +4,7 @@ using ReminderApp.Views;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Input;
+using static Microsoft.Maui.ApplicationModel.Permissions;
 
 namespace ReminderApp.ViewModels;
 
@@ -75,7 +76,15 @@ public class ListViewModel : BaseViewModel
         MainThread.BeginInvokeOnMainThread(() =>
         {
             Reminders.Remove(item);
-        });
+        }); 
+		
+		var notifications = await App.Database.GetNotificationsByReminderIdAsync(item.Reminder.Id);
+
+        foreach (var n in notifications)
+        {
+            NotificationService.CancelNotification(n.Id);
+            await App.Database.DeleteNotificationAsync(n);
+        }
 
         // 4️⃣ уведомление пользователю
         await Toast.Make("Задача выполнена").Show();
